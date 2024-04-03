@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "sequelize": "sequelize-auto -h localhost -d hultia_core -u root -x -p 3306 -o models",
+    "sequelize": "sequelize-auto -h localhost -d auction -u root -x -p 3306 -o models",
     "dev": "nodemon index"
   },
   "author": "Alzubair Mohammed",
