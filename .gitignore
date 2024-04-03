@@ -1,0 +1,6 @@
+node_modules
+db/connection.js
+models/*.js
+uploads
+database/connection.js
+.env
