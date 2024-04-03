@@ -1,7 +1,7 @@
 -- users queries
 
 -- Create users table
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE users (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     image VARCHAR(255),
@@ -9,13 +9,13 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- Create roles table
-CREATE TABLE IF NOT EXISTS roles (
+CREATE TABLE roles (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL
 );
 
 -- Create user_roles table
-CREATE TABLE IF NOT EXISTS user_roles (
+CREATE TABLE user_roles (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     role_id BIGINT UNSIGNED NOT NULL,
     user_id BIGINT UNSIGNED NOT NULL,
@@ -24,14 +24,14 @@ CREATE TABLE IF NOT EXISTS user_roles (
 );
 
 -- Create permissions table
-CREATE TABLE IF NOT EXISTS permissions (
+CREATE TABLE permissions (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT
 );
 
 -- Create role_permissions table
-CREATE TABLE IF NOT EXISTS role_permissions (
+CREATE TABLE role_permissions (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     role_id BIGINT UNSIGNED NOT NULL,
     permission_id BIGINT UNSIGNED NOT NULL,
