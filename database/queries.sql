@@ -43,87 +43,93 @@ CREATE TABLE role_permissions (
 
 -- Create auctions table
 CREATE TABLE auctions (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     assignment_number VARCHAR(255) NOT NULL,
     auction_type ENUM('type1', 'type2', 'type3') NOT NULL,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
     name VARCHAR(255) NOT NULL,
-    user_id INTEGER NOT NULL,
-    PRIMARY KEY (assignment_number)
+    user_id BIGINT UNSIGNED NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
+
+-- Create realestate_types table
+CREATE TABLE realestate_types (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
 
 -- Create realestates table
 CREATE TABLE realestates (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     customer_name VARCHAR(255) NOT NULL,
     owner_name VARCHAR(255) NOT NULL,
     owner_number VARCHAR(255) NOT NULL,
     customer_number VARCHAR(255) NOT NULL,
-    auction_id INTEGER NOT NULL,
-    PRIMARY KEY (owner_number),
-    FOREIGN KEY (auction_id) REFERENCES auctions(assignment_number)
+    auction_id BIGINT UNSIGNED NOT NULL,
+    realestate_type_id BIGINT UNSIGNED NOT NULL,
+    FOREIGN KEY (auction_id) REFERENCES auctions(id),
+    FOREIGN KEY (realestate_type_id) REFERENCES realestate_types(id)
 );
 
 -- Create realestate_documents table
 CREATE TABLE realestate_documents (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     number VARCHAR(255) NOT NULL,
     owner_number VARCHAR(255),
     customer_name VARCHAR(255),
     order_number VARCHAR(255),
     path VARCHAR(255),
-    realestate_id INTEGER NOT NULL,
-    PRIMARY KEY (number),
-    FOREIGN KEY (realestate_id) REFERENCES realestates(owner_number)
+    realestate_id BIGINT UNSIGNED NOT NULL,
+    FOREIGN KEY (realestate_id) REFERENCES realestates(id)
 );
 
 -- Create realestate_licenses table
 CREATE TABLE realestate_licenses (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     number INTEGER NOT NULL,
-    issuance_place_id VARCHAR(255) NOT NULL,
-    realestate_type_id INTEGER NOT NULL,
+    issuance_place_id BIGINT UNSIGNED NOT NULL,
+    realestate_type_id BIGINT UNSIGNED NOT NULL,
     date DATE NOT NULL,
     path VARCHAR(255) NOT NULL,
-    realestate_id INTEGER NOT NULL,
-    PRIMARY KEY (number),
-    FOREIGN KEY (realestate_id) REFERENCES realestates(owner_number)
-);
-
--- Create cities table
-CREATE TABLE cities (
-    name VARCHAR(255) NOT NULL,
-    area_id INTEGER NOT NULL,
-    PRIMARY KEY (name),
-    FOREIGN KEY (area_id) REFERENCES areas(area_id)
+    realestate_id BIGINT UNSIGNED NOT NULL,
+    FOREIGN KEY (realestate_id) REFERENCES realestates(id),
+    FOREIGN KEY (issuance_place_id) REFERENCES cities(id),
+    FOREIGN KEY (realestate_type_id) REFERENCES realestate_types(id)
 );
 
 -- Create areas table
 CREATE TABLE areas (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+-- Create cities table
+CREATE TABLE cities (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    PRIMARY KEY (name)
+    area_id BIGINT UNSIGNED NOT NULL,
+    FOREIGN KEY (area_id) REFERENCES areas(id)
 );
 
 -- Create quarter table
 CREATE TABLE quarters (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    city_id INTEGER NOT NULL,
-    PRIMARY KEY (name),
-    FOREIGN KEY (city_id) REFERENCES cities(name)
-);
-
--- Create realestate_types table
-CREATE TABLE realestate_types (
-    name VARCHAR(255) NOT NULL,
-    PRIMARY KEY (name)
+    city_id BIGINT UNSIGNED NOT NULL,
+    FOREIGN KEY (city_id) REFERENCES cities(id)
 );
 
 -- Create realestate_owners table
 CREATE TABLE realestate_owners (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     identity_number INTEGER NOT NULL,
     nationality VARCHAR(255) NOT NULL,
     ownership_percentage INTEGER NOT NULL,
-    realestate_id INTEGER NOT NULL,
-    PRIMARY KEY (identity_number),
-    FOREIGN KEY (realestate_id) REFERENCES realestates(owner_number)
+    realestate_id BIGINT UNSIGNED NOT NULL,
+    FOREIGN KEY (realestate_id) REFERENCES realestates(id)
 );
 
 -- scans queries
@@ -166,11 +172,11 @@ CREATE TABLE realestate_components (
 
 CREATE TABLE orders (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    admin_id INT NOT NULL,
-    user_id INT NOT NULL,
+    admin_id BIGINT UNSIGNED NOT NULL,
+    auction_id BIGINT UNSIGNED NOT NULL,
     status ENUM('pending', 'completed', 'cancelled') NOT NULL,
     FOREIGN KEY (admin_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (auction_id) REFERENCES auctions(id) ON DELETE CASCADE
 );
 
 CREATE TABLE realestate_images (
@@ -205,7 +211,6 @@ CREATE TABLE realestate_feature_options (
     FOREIGN KEY (realestate_feature_id) REFERENCES realestate_features(id) ON DELETE CASCADE
 );
 
-
 -- evaluations queries
 
 CREATE TABLE comparisons_evaluations (
@@ -237,7 +242,6 @@ CREATE TABLE comparisons_evaluation_realestates (
     FOREIGN KEY (evaluation_properties_id) REFERENCES evaluation_properties(id) ON DELETE CASCADE 
 );
 
-
 CREATE TABLE evaluation_properties (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -252,7 +256,7 @@ CREATE TABLE cost_evaluations (
     realestate_id BIGINT UNSIGNED NOT NULL,
     total_cost DECIMAL(10, 2) NOT NULL,
     building_cost DECIMAL(10, 2) NOT NULL,
-    building_cost_after_depreciation DECIMAL(10, 2) NOT NULL
+    building_cost_after_depreciation DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (realestate_id) REFERENCES realestates(id) ON DELETE CASCADE
 );
 
@@ -280,7 +284,7 @@ CREATE TABLE indirect_costs (
 
 CREATE TABLE indirect_cost_components (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    indirect_cost_id INT NOT NULL,
+    indirect_cost_id BIGINT UNSIGNED NOT NULL,
     name VARCHAR(255) NOT NULL,
     percentage INT,
     price DECIMAL(10, 2),
@@ -294,6 +298,6 @@ CREATE TABLE depreciations (
     realestate_expected_life_span INT NOT NULL,
     type ENUM('Straight Line', 'Double Declining Balance') NOT NULL,
     depreciation_rate INT NOT NULL,
-    depreciation_value DECIMAL(10, 2) NOT NULL
+    depreciation_value DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (cost_evaluation_id) REFERENCES cost_evaluations(id) ON DELETE CASCADE
 );
