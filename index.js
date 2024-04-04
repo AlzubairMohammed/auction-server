@@ -6,6 +6,7 @@ const auctions = require("./routes/auctions");
 const realestates = require("./routes/realestates");
 const areas = require("./routes/areas");
 const cities = require("./routes/cities");
+const quarters = require("./routes/quarters");
 const httpStatus = require("./utils/httpStatus");
 const fileEasyUpload = require("express-easy-fileuploader");
 app.use(express.json());
@@ -31,6 +32,7 @@ app.use(`${URL}/auctions`, auctions);
 app.use(`${URL}/realestates`, realestates);
 app.use(`${URL}/areas`, areas);
 app.use(`${URL}/cities`, cities);
+app.use(`${URL}/quarters`, quarters);
 
 app.use(express.static("."));
 // global error handler
