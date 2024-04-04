@@ -3,7 +3,7 @@ const { models } = require("../database/connection");
 const httpStatus = require("../utils/httpStatus.js");
 const errorResponse = require("../utils/errorResponse");
 const { validationResult } = require("express-validator");
-const { cities } = models;
+const { cities, quarters } = models;
 
 exports.createCity = asyncWrapper(async (req, res, next) => {
   const errors = validationResult(req);
@@ -21,7 +21,15 @@ exports.getCities = asyncWrapper(async (req, res) => {
 });
 
 exports.getCity = asyncWrapper(async (req, res) => {
-  let data = await cities.findOne({ where: { id: req.params.id } });
+  let data = await cities.findOne({
+    where: { id: req.params.id },
+    include: [
+      {
+        model: quarters,
+        as: "quarters",
+      },
+    ],
+  });
   return res.json({ status: httpStatus.SUCCESS, data });
 });
 
