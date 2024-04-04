@@ -30,17 +30,10 @@ const editAuction = asyncWrapper(async (req, res) => {
   return res.json({ status: httpStatus.SUCCESS, data });
 });
 
-// Delete an auction
-const deleteAuction = (req, res) => {
-  // Extract the auction ID from the request parameters
-  const { id } = req.params;
-
-  // Delete the auction from the database using the ID
-  // Auction.findByIdAndDelete(id); // Example delete operation using a model
-
-  // Return a response indicating success or failure
-  res.status(200).json({ message: "Auction deleted successfully" });
-};
+const deleteAuction = asyncWrapper(async (req, res) => {
+  let data = await auctions.destroy({ where: { id: req.params.id } });
+  return res.json({ status: httpStatus.SUCCESS, data });
+});
 
 // Export the controller functions
 module.exports = {
