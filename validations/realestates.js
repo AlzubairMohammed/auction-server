@@ -52,5 +52,25 @@ exports.realestateValidator = () => {
       .withMessage("Field is required .")
       .isInt()
       .withMessage("Field must be integer ."),
+    body("owners.*.name")
+      .notEmpty()
+      .withMessage("Field is required .")
+      .isString()
+      .withMessage("Field must be string ."),
+    body("owners.*.identity_number")
+      .notEmpty()
+      .withMessage("Field is required .")
+      .isString()
+      .withMessage("Field must be string ."),
+    body("owners.*.nationality")
+      .notEmpty()
+      .withMessage("Field is required .")
+      .isString()
+      .withMessage("Field must be string ."),
+    body("owners.*.ownership_percentage")
+      .notEmpty()
+      .withMessage("Field is required .")
+      .isInt()
+      .withMessage("Field must be string ."),
   ];
 };

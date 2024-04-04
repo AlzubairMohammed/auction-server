@@ -12,13 +12,16 @@ exports.createRealestate = asyncWrapper(async (req, res, next) => {
     license_date,
     license_path,
     license_realestate_type_id,
+    owners,
   } = req.body;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = errorResponse.create(errors.array(), 400, httpStatus.FAIL);
     return next(error);
   }
+  // create realestate
   let data = await realestates.create(req.body);
+  // create realestate license
   await realestate_licenses.create({
     realestate_id: data.id,
     number: license_number,
@@ -27,6 +30,18 @@ exports.createRealestate = asyncWrapper(async (req, res, next) => {
     path: license_path,
     realestate_type_id: license_realestate_type_id,
   });
+  // create realestate owners
+  if (owners) {
+    await realestate_owners.bulkCreate(
+      owners.map((owner) => ({
+        realestate_id: data.id,
+        name: owner.name,
+        identity_number: owner.identity_number,
+        nationality: owner.nationality,
+        ownership_percentage: owner.ownership_percentage,
+      }))
+    );
+  }
   return res.json({ status: httpStatus.SUCCESS, data });
 });
 
@@ -43,8 +58,6 @@ exports.getRealestate = asyncWrapper(async (req, res) => {
         model: realestate_owners,
         as: "realestate_owners",
       },
-    ],
-    include: [
       {
         model: realestate_licenses,
         as: "realestate_licenses",
