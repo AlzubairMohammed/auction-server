@@ -9,6 +9,7 @@ const cities = require("./routes/cities");
 const quarters = require("./routes/quarters");
 const realestateTypes = require("./routes/realestateTypes");
 const realestateOwners = require("./routes/realestateOwners");
+const scanRealestateFeatures = require("./routes/scanRealestateFeatures");
 const scans = require("./routes/scans");
 const httpStatus = require("./utils/httpStatus");
 const fileEasyUpload = require("express-easy-fileuploader");
@@ -39,6 +40,7 @@ app.use(`${URL}/quarters`, quarters);
 app.use(`${URL}/realestateTypes`, realestateTypes);
 app.use(`${URL}/realestateOwners`, realestateOwners);
 app.use(`${URL}/scans`, scans);
+app.use(`${URL}/scanRealestateFeatures`, scanRealestateFeatures);
 
 app.use(express.static("."));
 // global error handler
