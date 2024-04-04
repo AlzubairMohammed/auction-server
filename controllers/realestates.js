@@ -3,7 +3,7 @@ const { models } = require("../database/connection");
 const httpStatus = require("../utils/httpStatus.js");
 const errorResponse = require("../utils/errorResponse");
 const { validationResult } = require("express-validator");
-const { realestates } = models;
+const { realestates, realestate_owners } = models;
 
 exports.createRealestate = asyncWrapper(async (req, res, next) => {
   const errors = validationResult(req);
@@ -21,7 +21,15 @@ exports.getRealestates = asyncWrapper(async (req, res) => {
 });
 
 exports.getRealestate = asyncWrapper(async (req, res) => {
-  let data = await realestates.findOne({ where: { id: req.params.id } });
+  let data = await realestates.findOne({
+    where: { id: req.params.id },
+    include: [
+      {
+        model: realestate_owners,
+        as: "realestate_owners",
+      },
+    ],
+  });
   return res.json({ status: httpStatus.SUCCESS, data });
 });
 
