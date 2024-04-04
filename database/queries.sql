@@ -232,6 +232,14 @@ CREATE TABLE direct_capitalization_evaluations (
     FOREIGN KEY (realestate_id) REFERENCES realestates(id) ON DELETE CASCADE
 );
 
+CREATE TABLE evaluation_properties (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    value VARCHAR(255) NOT NULL,
+    percentage INT NOT NULL
+    );
+
+
 CREATE TABLE comparisons_evaluation_realestates ( 
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
     comparisons_evaluation_id BIGINT UNSIGNED NOT NULL, 
@@ -240,15 +248,6 @@ CREATE TABLE comparisons_evaluation_realestates (
     weighted INT NOT NULL, 
     FOREIGN KEY (comparisons_evaluation_id) REFERENCES comparisons_evaluations(id) ON DELETE CASCADE, 
     FOREIGN KEY (evaluation_properties_id) REFERENCES evaluation_properties(id) ON DELETE CASCADE 
-);
-
-CREATE TABLE evaluation_properties (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    value VARCHAR(255) NOT NULL,
-    comparisons_evaluation_realestate_id BIGINT UNSIGNED NOT NULL,
-    percentage INT NOT NULL,
-    FOREIGN KEY (comparisons_evaluation_realestate_id) REFERENCES comparisons_evaluation_realestates(id) ON DELETE CASCADE
 );
 
 CREATE TABLE cost_evaluations (
