@@ -68,9 +68,7 @@ CREATE TABLE realestates (
     owner_number VARCHAR(255) NOT NULL,
     customer_number VARCHAR(255) NOT NULL,
     auction_id BIGINT UNSIGNED NOT NULL,
-    realestate_type_id BIGINT UNSIGNED NOT NULL,
-    FOREIGN KEY (auction_id) REFERENCES auctions(id),
-    FOREIGN KEY (realestate_type_id) REFERENCES realestate_types(id)
+    FOREIGN KEY (auction_id) REFERENCES auctions(id)
 );
 
 -- Create realestate_documents table
