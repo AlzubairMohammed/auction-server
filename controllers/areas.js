@@ -3,7 +3,25 @@ const { models } = require("../database/connection");
 const httpStatus = require("../utils/httpStatus.js");
 const errorResponse = require("../utils/errorResponse");
 const { validationResult } = require("express-validator");
-const { areas } = models;
+const { areas, cities } = models;
+
+exports.getAreas = asyncWrapper(async (req, res) => {
+  let data = await areas.findAll();
+  return res.json({ status: httpStatus.SUCCESS, data });
+});
+
+exports.getArea = asyncWrapper(async (req, res) => {
+  let data = await areas.findOne({
+    where: { id: req.params.id },
+    include: [
+      {
+        model: cities,
+        as: "cities",
+      },
+    ],
+  });
+  return res.json({ status: httpStatus.SUCCESS, data });
+});
 
 exports.createArea = asyncWrapper(async (req, res, next) => {
   const errors = validationResult(req);
@@ -12,16 +30,6 @@ exports.createArea = asyncWrapper(async (req, res, next) => {
     return next(error);
   }
   let data = await areas.create(req.body);
-  return res.json({ status: httpStatus.SUCCESS, data });
-});
-
-exports.getAreas = asyncWrapper(async (req, res) => {
-  let data = await areas.findAll();
-  return res.json({ status: httpStatus.SUCCESS, data });
-});
-
-exports.getArea = asyncWrapper(async (req, res) => {
-  let data = await areas.findOne({ where: { id: req.params.id } });
   return res.json({ status: httpStatus.SUCCESS, data });
 });
 
