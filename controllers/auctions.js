@@ -3,29 +3,17 @@ const { models } = require("../database/connection");
 const httpStatus = require("../utils/httpStatus.js");
 const errorResponse = require("../utils/errorResponse");
 const { validationResult } = require("express-validator");
+const { auctions } = models;
 
-const createAuction = (req, res, next) => {
+const createAuction = asyncWrapper(async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = errorResponse.create(errors.array(), 400, httpStatus.FAIL);
     return next(error);
   }
-  const { title, description, startingPrice } = req.body;
-  const newAuction = {
-    title,
-    description,
-    startingPrice,
-    // Add any additional properties as needed
-  };
-
-  // Save the new auction to the database
-  // Auction.create(newAuction); // Example save operation using a model
-
-  // Return a response indicating success or failure
-  res
-    .status(201)
-    .json({ message: "Auction created successfully", auction: newAuction });
-};
+  let data = await auctions.create(req.body);
+  return res.json({ status: httpStatus.SUCCESS, data });
+});
 
 // Get all auctions
 const getAuctions = (req, res) => {
