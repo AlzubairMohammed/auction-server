@@ -4,6 +4,7 @@ require("dotenv").config();
 const users = require("./routes/users");
 const auctions = require("./routes/auctions");
 const realestates = require("./routes/realestates");
+const areas = require("./routes/areas");
 const httpStatus = require("./utils/httpStatus");
 const fileEasyUpload = require("express-easy-fileuploader");
 app.use(express.json());
@@ -27,6 +28,7 @@ const URL = process.env.ROUTES_URL;
 app.use(`${URL}/users`, users);
 app.use(`${URL}/auctions`, auctions);
 app.use(`${URL}/realestates`, realestates);
+app.use(`${URL}/areas`, areas);
 
 app.use(express.static("."));
 // global error handler
