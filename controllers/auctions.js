@@ -3,6 +3,7 @@ const { models } = require("../database/connection");
 const httpStatus = require("../utils/httpStatus.js");
 const errorResponse = require("../utils/errorResponse");
 const { validationResult } = require("express-validator");
+const { where } = require("sequelize");
 const { auctions } = models;
 
 const createAuction = asyncWrapper(async (req, res, next) => {
@@ -15,26 +16,15 @@ const createAuction = asyncWrapper(async (req, res, next) => {
   return res.json({ status: httpStatus.SUCCESS, data });
 });
 
-// Get all auctions
-const getAuctions = (req, res) => {
-  // Retrieve all auctions from the database
-  // const auctions = Auction.find(); // Example find operation using a model
+const getAuctions = asyncWrapper(async (req, res) => {
+  let data = await auctions.findAll();
+  return res.json({ status: httpStatus.SUCCESS, data });
+});
 
-  // Return the retrieved auctions
-  res.status(200).json({ auctions });
-};
-
-// Get a single auction by ID
-const getAuction = (req, res) => {
-  // Extract the auction ID from the request parameters
-  const { id } = req.params;
-
-  // Retrieve the auction from the database using the ID
-  // const auction = Auction.findById(id); // Example find operation using a model
-
-  // Return the retrieved auction
-  res.status(200).json({ auction });
-};
+const getAuction = asyncWrapper(async (req, res) => {
+  let data = await auctions.findOne({ where: { id: req.params.id } });
+  return res.json({ status: httpStatus.SUCCESS, data });
+});
 
 // Update an existing auction
 const editAuction = (req, res) => {
