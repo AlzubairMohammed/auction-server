@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^1.6.7",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.4",
@@ -20,6 +21,7 @@
     "express-easy-fileuploader": "^1.0.2",
     "express-fileupload": "^1.4.3",
     "express-validator": "^7.0.1",
+    "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.9.1",
     "sequelize": "^6.37.1",
