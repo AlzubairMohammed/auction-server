@@ -12,6 +12,7 @@ const realestateOwners = require("./routes/realestateOwners");
 const scanRealestateFeatures = require("./routes/scanRealestateFeatures");
 const scans = require("./routes/scans");
 const admins = require("./routes/admins");
+const managers = require("./routes/managers");
 const httpStatus = require("./utils/httpStatus");
 const fileEasyUpload = require("express-easy-fileuploader");
 app.use(express.json());
@@ -43,6 +44,7 @@ app.use(`${URL}/realestateOwners`, realestateOwners);
 app.use(`${URL}/scans`, scans);
 app.use(`${URL}/scanRealestateFeatures`, scanRealestateFeatures);
 app.use(`${URL}/admins`, admins);
+app.use(`${URL}/managers`, managers);
 
 app.use(express.static("."));
 // global error handler

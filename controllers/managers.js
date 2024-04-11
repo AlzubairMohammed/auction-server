@@ -110,7 +110,7 @@ exports.login = asyncWrapper(async (req, res, next) => {
   }
 });
 
-exports.updateManger = asyncWrapper(async (req, res, next) => {
+exports.updateManager = asyncWrapper(async (req, res, next) => {
   const errors = validationResult(req);
   const id = req.params.id;
   if (!errors.isEmpty()) {
@@ -129,19 +129,19 @@ exports.updateManger = asyncWrapper(async (req, res, next) => {
     );
     return next(error);
   }
-  res.json({ status: httpStatus.SUCCESS, data: "Admin updated successfuly" });
+  res.json({ status: httpStatus.SUCCESS, data: "Manager updated successfuly" });
 });
 
-exports.deleteAdmin = asyncWrapper(async (req, res, next) => {
+exports.deleteManager = asyncWrapper(async (req, res, next) => {
   const id = req.params.id;
-  const data = await admins.destroy({ where: { id } });
+  const data = await managers.destroy({ where: { id } });
   if (!data) {
     const error = errorResponse.create(
-      `Admin with id = ${id} is not found`,
+      `Manager with id = ${id} is not found`,
       404,
       httpStatus.FAIL
     );
     return next(error);
   }
-  return res.json({ status: httpStatus.SUCCESS, data: "Admin deleted" });
+  return res.json({ status: httpStatus.SUCCESS, data: "Manager deleted" });
 });
