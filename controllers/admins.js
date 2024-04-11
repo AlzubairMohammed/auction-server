@@ -33,14 +33,14 @@ exports.createAdmin = asyncWrapper(async (req, res, next) => {
     const error = errorResponse.create(errors.array(), 400, httpStatus.FAIL);
     return next(error);
   }
-  const oldUser = await admins.findOne({
+  const oldAdmin = await admins.findOne({
     where: {
       email,
     },
   });
-  if (oldUser) {
+  if (oldAdmin) {
     const error = errorResponse.create(
-      "User already exists",
+      "Admin already exists",
       400,
       httpStatus.FAIL
     );
@@ -56,7 +56,7 @@ exports.createAdmin = asyncWrapper(async (req, res, next) => {
   await data.save();
   return res.json({
     status: httpStatus.SUCCESS,
-    data: "User created successfuly",
+    data: "Admin created successfuly",
   });
 });
 
@@ -72,24 +72,24 @@ exports.login = asyncWrapper(async (req, res, next) => {
     return next(error);
   }
 
-  const user = await admins.findOne({
+  const admin = await admins.findOne({
     where: {
       email,
     },
   });
 
-  if (!user) {
-    const error = errorResponse.create("user not found", 400, httpStatus.FAIL);
+  if (!admin) {
+    const error = errorResponse.create("Admin not found", 400, httpStatus.FAIL);
     return next(error);
   }
 
-  const matchedPassword = await bcrypt.compare(password, user.password);
+  const matchedPassword = await bcrypt.compare(password, admin.password);
 
-  if (user && matchedPassword) {
+  if (admin && matchedPassword) {
     const token = await jwt({
-      email: user.email,
-      role: user.role,
-      id: user.id,
+      email: admin.email,
+      role: admin.role,
+      id: admin.id,
     });
 
     return res.json({
@@ -119,13 +119,13 @@ exports.updateAdmin = asyncWrapper(async (req, res, next) => {
   console.log(data);
   if (!data[0]) {
     const error = errorResponse.create(
-      `User with id = ${id} is not found`,
+      `Admin with id = ${id} is not found`,
       404,
       httpStatus.FAIL
     );
     return next(error);
   }
-  res.json({ status: httpStatus.SUCCESS, data: "User updated successfuly" });
+  res.json({ status: httpStatus.SUCCESS, data: "Admin updated successfuly" });
 });
 
 exports.deleteAdmin = asyncWrapper(async (req, res, next) => {
@@ -133,11 +133,11 @@ exports.deleteAdmin = asyncWrapper(async (req, res, next) => {
   const data = await admins.destroy({ where: { id } });
   if (!data) {
     const error = errorResponse.create(
-      `User with id = ${id} is not found`,
+      `Admin with id = ${id} is not found`,
       404,
       httpStatus.FAIL
     );
     return next(error);
   }
-  return res.json({ status: httpStatus.SUCCESS, data: "User deleted" });
+  return res.json({ status: httpStatus.SUCCESS, data: "Admin deleted" });
 });
