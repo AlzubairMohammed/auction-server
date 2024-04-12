@@ -17,7 +17,9 @@ exports.createAuction = asyncWrapper(async (req, res, next) => {
 });
 
 exports.getAuctions = asyncWrapper(async (req, res) => {
-  let data = await auctions.findAll();
+  const limit = +req.query.limit || 10;
+  const offset = +req.query.offset || 0;
+  let data = await auctions.findAll({ limit, offset });
   return res.json({ status: httpStatus.SUCCESS, data });
 });
 
