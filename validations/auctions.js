@@ -23,7 +23,16 @@ exports.auctionsValidator = () => {
       .withMessage("Field is required .")
       .isDate()
       .withMessage("Field must be date ."),
-    body("user_id").notEmpty().withMessage("Field is required ."),
+    body("user_id")
+      .notEmpty()
+      .withMessage("Field is required .")
+      .isInt()
+      .withMessage("Field must be integer ."),
+    body("admin_id")
+      .notEmpty()
+      .withMessage("Field is required .")
+      .isInt()
+      .withMessage("Field must be integer ."),
   ];
 };
 

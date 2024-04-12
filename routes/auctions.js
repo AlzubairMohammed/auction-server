@@ -7,6 +7,7 @@ const {
   editAuction,
   deleteAuction,
   search,
+  getAminAuctions,
 } = require("../controllers/auctions");
 
 router
@@ -15,6 +16,7 @@ router
   .get("/", getAuctions)
   .delete("/:id", deleteAuction)
   .put("/:id", editAuction)
-  .post("/search", search);
+  .post("/search", search)
+  .get("/admin/:id", getAminAuctions);
 
 module.exports = router;
