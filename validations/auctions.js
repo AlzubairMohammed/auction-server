@@ -26,3 +26,10 @@ exports.auctionsValidator = () => {
     body("user_id").notEmpty().withMessage("Field is required ."),
   ];
 };
+
+exports.auctionsSearchValidator = () => {
+  return [
+    body("key").notEmpty().withMessage("Field is required ."),
+    body("value").notEmpty().withMessage("Field is required ."),
+  ];
+};
