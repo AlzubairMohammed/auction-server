@@ -56,8 +56,8 @@ exports.getAminAuctions = asyncWrapper(async (req, res) => {
     include: {
       model: users,
       as: "user",
+      attributes: { exclude: ["password"] },
       where: { admin_id: req.params.id },
-      include: ["admin"],
     },
   });
 
