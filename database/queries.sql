@@ -78,9 +78,7 @@ CREATE TABLE auctions (
     end_date DATE NOT NULL,
     name VARCHAR(255) NOT NULL,
     user_id BIGINT UNSIGNED NOT NULL,
-    admin_id BIGINT UNSIGNED NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (admin_id) REFERENCES admins(id)
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 -- Create realestate_types table
