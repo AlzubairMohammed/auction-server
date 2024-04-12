@@ -27,27 +27,27 @@ exports.realestateValidator = () => {
       .withMessage("Field is required .")
       .isInt()
       .withMessage("Field must be integer ."),
-    body("license_number")
+    body("license.number")
       .notEmpty()
       .withMessage("Field is required .")
       .isString()
       .withMessage("Field must be string ."),
-    body("license_issuance_place_id")
+    body("license.issuance_place_id")
       .notEmpty()
       .withMessage("Field is required .")
       .isInt()
       .withMessage("Field must be integer ."),
-    body("license_date")
+    body("license.date")
       .notEmpty()
       .withMessage("Field is required .")
       .isDate()
       .withMessage("Field must be date ."),
-    body("license_path")
+    body("license.path")
       .notEmpty()
       .withMessage("Field is required .")
       .isString()
       .withMessage("Field must be string ."),
-    body("license_realestate_type_id")
+    body("license.realestate_type_id")
       .notEmpty()
       .withMessage("Field is required .")
       .isInt()

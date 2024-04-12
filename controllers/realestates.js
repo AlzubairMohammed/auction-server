@@ -6,14 +6,7 @@ const { validationResult } = require("express-validator");
 const { realestates, realestate_owners, realestate_licenses } = models;
 
 exports.createRealestate = asyncWrapper(async (req, res, next) => {
-  const {
-    license_number,
-    license_issuance_place_id,
-    license_date,
-    license_path,
-    license_realestate_type_id,
-    owners,
-  } = req.body;
+  const { owners } = req.body;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = errorResponse.create(errors.array(), 400, httpStatus.FAIL);
@@ -22,14 +15,8 @@ exports.createRealestate = asyncWrapper(async (req, res, next) => {
   // create realestate
   let data = await realestates.create(req.body);
   // create realestate license
-  await realestate_licenses.create({
-    realestate_id: data.id,
-    number: license_number,
-    issuance_place_id: license_issuance_place_id,
-    date: license_date,
-    path: license_path,
-    realestate_type_id: license_realestate_type_id,
-  });
+  req.body.license.realestate_id = data.id;
+  await realestate_licenses.create(req.body.license);
   // create realestate owners
   if (owners) {
     await realestate_owners.bulkCreate(
