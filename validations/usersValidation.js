@@ -15,6 +15,11 @@ exports.createUserValidator = () => {
       .isLength({ min: 4 })
       .withMessage("name at least is 4 digits"),
     body("email").notEmpty().withMessage("you must to send email"),
+    body("admin_id")
+      .notEmpty()
+      .withMessage("you must to send admin_id")
+      .isInt()
+      .withMessage("admin_id must be a number"),
   ];
 };
 exports.loginValidation = () => {
