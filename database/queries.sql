@@ -16,6 +16,23 @@ CREATE TABLE admins (
     email VARCHAR(255) NOT NULL
 );
 
+-- Create users table
+CREATE TABLE users (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    image VARCHAR(255),
+    admin_id BIGINT UNSIGNED NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    FOREIGN KEY (admin_id) REFERENCES admins(id) ON DELETE CASCADE
+);
+
+-- Create roles table
+CREATE TABLE roles (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
 -- Create admin_roles table
 CREATE TABLE admin_roles (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -23,21 +40,6 @@ CREATE TABLE admin_roles (
     role_id BIGINT UNSIGNED NOT NULL,
     name VARCHAR(255) NOT NULL,
     FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
-);
-
--- Create users table
-CREATE TABLE users (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    image VARCHAR(255),
-    password VARCHAR(255) NOT NULL
-);
-
--- Create roles table
-CREATE TABLE roles (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
 );
 
 -- Create user_roles table
@@ -109,20 +111,6 @@ CREATE TABLE realestate_documents (
     FOREIGN KEY (realestate_id) REFERENCES realestates(id)
 );
 
--- Create realestate_licenses table
-CREATE TABLE realestate_licenses (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    number INTEGER NOT NULL,
-    issuance_place_id BIGINT UNSIGNED NOT NULL,
-    realestate_type_id BIGINT UNSIGNED NOT NULL,
-    date DATE NOT NULL,
-    path VARCHAR(255) NOT NULL,
-    realestate_id BIGINT UNSIGNED NOT NULL,
-    FOREIGN KEY (realestate_id) REFERENCES realestates(id),
-    FOREIGN KEY (issuance_place_id) REFERENCES cities(id),
-    FOREIGN KEY (realestate_type_id) REFERENCES realestate_types(id)
-);
-
 -- Create areas table
 CREATE TABLE areas (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -135,6 +123,20 @@ CREATE TABLE cities (
     name VARCHAR(255) NOT NULL,
     area_id BIGINT UNSIGNED NOT NULL,
     FOREIGN KEY (area_id) REFERENCES areas(id)
+);
+
+-- Create realestate_licenses table
+CREATE TABLE realestate_licenses (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    number INTEGER NOT NULL,
+    issuance_place_id BIGINT UNSIGNED NOT NULL,
+    realestate_type_id BIGINT UNSIGNED NOT NULL,
+    date DATE NOT NULL,
+    path VARCHAR(255) NOT NULL,
+    realestate_id BIGINT UNSIGNED NOT NULL,
+    FOREIGN KEY (realestate_id) REFERENCES realestates(id),
+    FOREIGN KEY (issuance_place_id) REFERENCES cities(id),
+    FOREIGN KEY (realestate_type_id) REFERENCES realestate_types(id)
 );
 
 -- Create quarter table
@@ -203,6 +205,11 @@ CREATE TABLE orders (
     FOREIGN KEY (auction_id) REFERENCES auctions(id) ON DELETE CASCADE
 );
 
+CREATE TABLE realestate_images_descriptions (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    description TEXT NOT NULL
+);
+
 CREATE TABLE realestate_images (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     path VARCHAR(255) NOT NULL,
@@ -210,12 +217,6 @@ CREATE TABLE realestate_images (
     realestate_images_description_id BIGINT UNSIGNED,
     FOREIGN KEY (realestate_id) REFERENCES realestates(id) ON DELETE CASCADE,
     FOREIGN KEY (realestate_images_description_id) REFERENCES realestate_images_descriptions(id) ON DELETE CASCADE
-);
-
-
-CREATE TABLE realestate_images_descriptions (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    description TEXT NOT NULL
 );
 
 
