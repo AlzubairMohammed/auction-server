@@ -16,6 +16,7 @@ const managers = require("./routes/managers");
 const httpStatus = require("./utils/httpStatus");
 const fileEasyUpload = require("express-easy-fileuploader");
 app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 const cors = require("cors");
 app.use(

@@ -3,15 +3,27 @@ const { models } = require("../database/connection");
 const httpStatus = require("../utils/httpStatus.js");
 const errorResponse = require("../utils/errorResponse");
 const { validationResult } = require("express-validator");
-const { realestates, realestate_owners, realestate_licenses } = models;
+const { convertFormData } = require("../utils/convertFormData.js");
+const {
+  realestates,
+  realestate_owners,
+  realestate_licenses,
+  realestate_documents,
+} = models;
 
 exports.createRealestate = asyncWrapper(async (req, res, next) => {
-  const { owners } = req.body;
+  req.body = convertFormData(req.body);
+  req.body.owners = Object.values(req.body.owners);
+  req.body.files = Object.values(req.body.files);
+  req.files = Object.values(req.files)[0];
+  // return res.json({ status: httpStatus.SUCCESS, data: req.body });
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = errorResponse.create(errors.array(), 400, httpStatus.FAIL);
     return next(error);
   }
+  const { owners, document } = req.body;
+  console.log(typeof owners, owners);
   // create realestate
   let data = await realestates.create(req.body);
   // create realestate license
@@ -29,6 +41,8 @@ exports.createRealestate = asyncWrapper(async (req, res, next) => {
       }))
     );
   }
+  // create realestate document
+
   return res.json({ status: httpStatus.SUCCESS, data });
 });
 
