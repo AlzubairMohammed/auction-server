@@ -250,7 +250,9 @@ CREATE TABLE realestate_feature_options (
 CREATE TABLE comparisons_evaluations (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     meter_price DECIMAL(10, 2) NOT NULL,
-    total_price DECIMAL(10, 2) NOT NULL
+    total_price DECIMAL(10, 2) NOT NULL,
+    realestate_id BIGINT UNSIGNED NOT NULL,
+    FOREIGN KEY (realestate_id) REFERENCES realestates(id) ON DELETE CASCADE
 );
 
 CREATE TABLE direct_capitalization_evaluations (
