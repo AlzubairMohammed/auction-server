@@ -249,8 +249,8 @@ CREATE TABLE realestate_feature_options (
 
 CREATE TABLE comparisons_evaluations (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    meter_price DECIMAL(10, 2) NOT NULL,
-    total_price DECIMAL(10, 2) NOT NULL,
+    meter_price DECIMAL(10, 2),
+    total_price DECIMAL(10, 2),
     realestate_id BIGINT UNSIGNED NOT NULL,
     FOREIGN KEY (realestate_id) REFERENCES realestates(id) ON DELETE CASCADE
 );
@@ -273,6 +273,15 @@ CREATE TABLE comparisons_evaluation_properties (
     name VARCHAR(255) NOT NULL,
     );
 
+CREATE TABLE comparisons_evaluation_realestates ( 
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
+    comparisons_evaluation_id BIGINT UNSIGNED NOT NULL,
+    meter_price DECIMAL(10, 2), 
+    weighted INT, 
+    FOREIGN KEY (comparisons_evaluation_id) REFERENCES comparisons_evaluations(id) ON DELETE CASCADE, 
+    
+);
+
 CREATE TABLE comparisons_evaluation_realestates_properties (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     comparisons_evaluation_properties_id BIGINT UNSIGNED NOT NULL,
@@ -281,14 +290,6 @@ CREATE TABLE comparisons_evaluation_realestates_properties (
     value VARCHAR(255) NOT NULL,
     FOREIGN KEY (comparisons_evaluation_properties_id) REFERENCES comparisons_evaluation_properties(id) ON DELETE CASCADE,
     FOREIGN KEY (comparisons_evaluation_realestate_id) REFERENCES comparisons_evaluation_realestates(id) ON DELETE CASCADE
-);
-
-CREATE TABLE comparisons_evaluation_realestates ( 
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
-    meter_price DECIMAL(10, 2) NOT NULL, 
-    weighted INT NOT NULL, 
-    FOREIGN KEY (comparisons_evaluation_id) REFERENCES comparisons_evaluations(id) ON DELETE CASCADE, 
-    
 );
 
 CREATE TABLE cost_evaluations (
