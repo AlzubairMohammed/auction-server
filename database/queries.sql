@@ -276,9 +276,11 @@ CREATE TABLE comparisons_evaluation_properties (
 CREATE TABLE comparisons_evaluation_realestates_properties (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     comparisons_evaluation_properties_id BIGINT UNSIGNED NOT NULL,
+    comparisons_evaluation_realestate_id BIGINT UNSIGNED NOT NULL,
     percentage INT NOT NULL,
     value VARCHAR(255) NOT NULL,
-    FOREIGN KEY (comparisons_evaluation_properties_id) REFERENCES comparisons_evaluation_properties(id) ON DELETE CASCADE
+    FOREIGN KEY (comparisons_evaluation_properties_id) REFERENCES comparisons_evaluation_properties(id) ON DELETE CASCADE,
+    FOREIGN KEY (comparisons_evaluation_realestate_id) REFERENCES comparisons_evaluation_realestates(id) ON DELETE CASCADE
 );
 
 CREATE TABLE comparisons_evaluation_realestates ( 
