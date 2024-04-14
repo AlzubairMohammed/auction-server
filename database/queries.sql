@@ -158,6 +158,15 @@ CREATE TABLE realestate_owners (
     FOREIGN KEY (realestate_id) REFERENCES realestates(id)
 );
 
+-- Create realestate_files table
+CREATE TABLE realestate_files (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    path VARCHAR(255) NOT NULL,
+    realestate_id BIGINT UNSIGNED NOT NULL,
+    FOREIGN KEY (realestate_id) REFERENCES realestates(id) ON DELETE CASCADE
+);
+
 -- scans queries
 
 CREATE TABLE scans (
