@@ -43,6 +43,7 @@ exports.getComparisonsEvaluation = asyncWrapper(async (req, res) => {
 exports.createComparisonsEvaluation = asyncWrapper(async (req, res, next) => {
   let comparisons = req.body.comparisons;
   let properties = req.body.properties;
+  let realestateData = req.body.realestate;
   let result = 0;
   let counter1 = comparisons.length;
   let counter2 = comparisons[0].length;
@@ -65,7 +66,6 @@ exports.createComparisonsEvaluation = asyncWrapper(async (req, res, next) => {
       }
     }
   }
-  result = result.toFixed(2);
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = errorResponse.create(errors.array(), 400, httpStatus.FAIL);
@@ -83,17 +83,17 @@ exports.createComparisonsEvaluation = asyncWrapper(async (req, res, next) => {
       }
     })
   );
+  // count total price by realestate meters and meter price
+  let totalPrice = realestateData.meters * result;
+  // create comparisons_evaluation
   let comparisonsEvaluationsData = await comparisons_evaluations.create({
-    realestate_id: req.body.realestate_id,
+    realestate_id: realestateData.id,
     meter_price: result,
+    total_price: totalPrice,
   });
-  let comparisonsEvaluationRealestatesData =
-    await comparisons_evaluation_realestates.create({
-      comparisons_evaluation_id: comparisonsEvaluationsData.id,
-    });
-
   let coun = 0;
   let counter = comparisons.length;
+  // create comparisons_evaluation_realestates_properties and comparisons_evaluation_properties
   while (counter--) {
     let comparisonsEvaluationRealestatesData =
       await comparisons_evaluation_realestates.create({
