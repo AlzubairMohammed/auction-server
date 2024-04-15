@@ -95,19 +95,32 @@ exports.createComparisonsEvaluation = asyncWrapper(async (req, res, next) => {
   let counter = comparisons.length;
   // create comparisons_evaluation_realestates_properties and comparisons_evaluation_properties
   while (counter--) {
-    let comparisonsEvaluationRealestatesData =
-      await comparisons_evaluation_realestates.create({
-        comparisons_evaluation_id: comparisonsEvaluationsData.id,
-      });
     let nestedCounter = comparisons[counter].length;
+    let nestedCounterStart = comparisons[counter].length;
+    let comparisonsEvaluationRealestatesData;
     while (nestedCounter--) {
-      await comparisons_evaluation_realestates_properties.create({
-        comparisons_evaluation_realestate_id:
-          comparisonsEvaluationRealestatesData.id,
-        comparisons_evaluation_properties_id: propertiesData[nestedCounter],
-        value: comparisons[counter][nestedCounter].value,
-        percentage: comparisons[counter][nestedCounter].percentage,
-      });
+      console.log(
+        nestedCounter,
+        nestedCounterStart,
+        "this is nestedCounter and nestedCounterStart"
+      );
+      if (nestedCounter === nestedCounterStart - 1) {
+        comparisonsEvaluationRealestatesData =
+          await comparisons_evaluation_realestates.create({
+            comparisons_evaluation_id: comparisonsEvaluationsData.id,
+            weighted: comparisons[counter][nestedCounter].percentage,
+            meter_price:
+              comparisons[counter][nestedCounter - nestedCounter].percentage,
+          });
+      } else {
+        await comparisons_evaluation_realestates_properties.create({
+          comparisons_evaluation_realestate_id:
+            comparisonsEvaluationRealestatesData.id,
+          comparisons_evaluation_properties_id: propertiesData[nestedCounter],
+          value: comparisons[counter][nestedCounter].value,
+          percentage: comparisons[counter][nestedCounter].percentage,
+        });
+      }
       coun++;
     }
     coun = 0;
