@@ -17,6 +17,24 @@ exports.getComparisonsEvaluations = asyncWrapper(async (req, res) => {
 
 exports.getComparisonsEvaluation = asyncWrapper(async (req, res) => {
   let data = await comparisons_evaluations.findOne({
+    include: [
+      {
+        model: comparisons_evaluation_realestates,
+        as: "comparisons_evaluation_realestates",
+        include: [
+          {
+            model: comparisons_evaluation_realestates_properties,
+            as: "comparisons_evaluation_realestates_properties",
+            include: [
+              {
+                model: comparisons_evaluation_properties,
+                as: "comparisons_evaluation_property",
+              },
+            ],
+          },
+        ],
+      },
+    ],
     where: { id: req.params.id },
   });
   return res.json({ status: httpStatus.SUCCESS, data });
@@ -53,13 +71,18 @@ exports.createComparisonsEvaluation = asyncWrapper(async (req, res, next) => {
     const error = errorResponse.create(errors.array(), 400, httpStatus.FAIL);
     return next(error);
   }
-  // looping in properties array to comparisons_evaluation_properties
-  let propertiesData;
-  properties.forEach(async (propertie) => {
-    propertiesData = await comparisons_evaluation_properties.create({
-      name: propertie,
-    });
-  });
+  let propertiesData = await Promise.all(
+    properties.map(async (property) => {
+      try {
+        const data = await comparisons_evaluation_properties.create({
+          name: property,
+        });
+        return data.id;
+      } catch (error) {
+        console.error(`Error creating property: ${error}`);
+      }
+    })
+  );
   let comparisonsEvaluationsData = await comparisons_evaluations.create({
     realestate_id: req.body.realestate_id,
     meter_price: result,
@@ -69,19 +92,25 @@ exports.createComparisonsEvaluation = asyncWrapper(async (req, res, next) => {
       comparisons_evaluation_id: comparisonsEvaluationsData.id,
     });
 
-  // looping in two dicmensions array
+  let coun = 0;
   let counter = comparisons.length;
   while (counter--) {
+    let comparisonsEvaluationRealestatesData =
+      await comparisons_evaluation_realestates.create({
+        comparisons_evaluation_id: comparisonsEvaluationsData.id,
+      });
     let nestedCounter = comparisons[counter].length;
     while (nestedCounter--) {
       await comparisons_evaluation_realestates_properties.create({
         comparisons_evaluation_realestate_id:
           comparisonsEvaluationRealestatesData.id,
-        comparisons_evaluation_properties_id: propertiesData.id,
+        comparisons_evaluation_properties_id: propertiesData[nestedCounter],
         value: comparisons[counter][nestedCounter].value,
         percentage: comparisons[counter][nestedCounter].percentage,
       });
+      coun++;
     }
+    coun = 0;
   }
 
   return res.json({
