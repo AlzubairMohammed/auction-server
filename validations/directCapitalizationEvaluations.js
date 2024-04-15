@@ -1,6 +1,6 @@
 const { body } = require("express-validator");
 
-exports.citiesValidator = () => {
+exports.directCapitalizationEvaluationValidator = () => {
   return [
     body("name")
       .notEmpty()
