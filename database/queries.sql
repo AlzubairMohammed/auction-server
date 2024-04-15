@@ -5,7 +5,9 @@ CREATE TABLE managers (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL
+    email VARCHAR(255) NOT NULL,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Create admins table
@@ -13,7 +15,9 @@ CREATE TABLE admins (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL
+    email VARCHAR(255) NOT NULL,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Create users table
@@ -24,13 +28,17 @@ CREATE TABLE users (
     image VARCHAR(255),
     admin_id BIGINT UNSIGNED NOT NULL,
     password VARCHAR(255) NOT NULL,
-    FOREIGN KEY (admin_id) REFERENCES admins(id) ON DELETE CASCADE
+    FOREIGN KEY (admin_id) REFERENCES admins(id) ON DELETE CASCADE,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Create roles table
 CREATE TABLE roles (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+    name VARCHAR(255) NOT NULL,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Create admin_roles table
@@ -39,7 +47,9 @@ CREATE TABLE admin_roles (
     admin_id BIGINT UNSIGNED NOT NULL,
     role_id BIGINT UNSIGNED NOT NULL,
     name VARCHAR(255) NOT NULL,
-    FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
+    FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Create user_roles table
@@ -48,14 +58,18 @@ CREATE TABLE user_roles (
     role_id BIGINT UNSIGNED NOT NULL,
     user_id BIGINT UNSIGNED NOT NULL,
     FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Create permissions table
 CREATE TABLE permissions (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    description TEXT
+    description TEXT,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Create role_permissions table
@@ -64,7 +78,9 @@ CREATE TABLE role_permissions (
     role_id BIGINT UNSIGNED NOT NULL,
     permission_id BIGINT UNSIGNED NOT NULL,
     FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE,
-    FOREIGN KEY (permission_id) REFERENCES permissions(id) ON DELETE CASCADE
+    FOREIGN KEY (permission_id) REFERENCES permissions(id) ON DELETE CASCADE,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- auctions queries
@@ -78,13 +94,17 @@ CREATE TABLE auctions (
     end_date DATE NOT NULL,
     name VARCHAR(255) NOT NULL,
     user_id BIGINT UNSIGNED NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Create realestate_types table
 CREATE TABLE realestate_types (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+    name VARCHAR(255) NOT NULL,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 
@@ -96,7 +116,9 @@ CREATE TABLE realestates (
     owner_number VARCHAR(255) NOT NULL,
     customer_number VARCHAR(255) NOT NULL,
     auction_id BIGINT UNSIGNED NOT NULL,
-    FOREIGN KEY (auction_id) REFERENCES auctions(id)
+    FOREIGN KEY (auction_id) REFERENCES auctions(id),
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Create realestate_documents table
@@ -108,13 +130,17 @@ CREATE TABLE realestate_documents (
     order_number VARCHAR(255),
     path VARCHAR(255),
     realestate_id BIGINT UNSIGNED NOT NULL,
-    FOREIGN KEY (realestate_id) REFERENCES realestates(id)
+    FOREIGN KEY (realestate_id) REFERENCES realestates(id),
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Create areas table
 CREATE TABLE areas (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+    name VARCHAR(255) NOT NULL,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Create cities table
@@ -122,7 +148,9 @@ CREATE TABLE cities (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     area_id BIGINT UNSIGNED NOT NULL,
-    FOREIGN KEY (area_id) REFERENCES areas(id)
+    FOREIGN KEY (area_id) REFERENCES areas(id),
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Create realestate_licenses table
@@ -136,7 +164,9 @@ CREATE TABLE realestate_licenses (
     realestate_id BIGINT UNSIGNED NOT NULL,
     FOREIGN KEY (realestate_id) REFERENCES realestates(id),
     FOREIGN KEY (issuance_place_id) REFERENCES cities(id),
-    FOREIGN KEY (realestate_type_id) REFERENCES realestate_types(id)
+    FOREIGN KEY (realestate_type_id) REFERENCES realestate_types(id),
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Create quarter table
@@ -144,7 +174,9 @@ CREATE TABLE quarters (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     city_id BIGINT UNSIGNED NOT NULL,
-    FOREIGN KEY (city_id) REFERENCES cities(id)
+    FOREIGN KEY (city_id) REFERENCES cities(id),
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Create realestate_owners table
@@ -155,7 +187,9 @@ CREATE TABLE realestate_owners (
     nationality VARCHAR(255) NOT NULL,
     ownership_percentage INTEGER NOT NULL,
     realestate_id BIGINT UNSIGNED NOT NULL,
-    FOREIGN KEY (realestate_id) REFERENCES realestates(id)
+    FOREIGN KEY (realestate_id) REFERENCES realestates(id),
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Create realestate_files table
@@ -164,7 +198,9 @@ CREATE TABLE realestate_files (
     name VARCHAR(255) NOT NULL,
     path VARCHAR(255) NOT NULL,
     realestate_id BIGINT UNSIGNED NOT NULL,
-    FOREIGN KEY (realestate_id) REFERENCES realestates(id) ON DELETE CASCADE
+    FOREIGN KEY (realestate_id) REFERENCES realestates(id) ON DELETE CASCADE,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- scans queries
@@ -176,7 +212,9 @@ CREATE TABLE scans (
     user_id BIGINT UNSIGNED NOT NULL,
     realestate_id BIGINT UNSIGNED NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (realestate_id) REFERENCES realestates(id) ON DELETE CASCADE
+    FOREIGN KEY (realestate_id) REFERENCES realestates(id) ON DELETE CASCADE,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE realestate_properties (
@@ -184,14 +222,18 @@ CREATE TABLE realestate_properties (
     name VARCHAR(255) NOT NULL,
     string_value VARCHAR(255),
     realestate_id BIGINT UNSIGNED NOT NULL,
-    FOREIGN KEY (realestate_id) REFERENCES realestates(id) ON DELETE CASCADE
+    FOREIGN KEY (realestate_id) REFERENCES realestates(id) ON DELETE CASCADE,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE components (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     user_id BIGINT UNSIGNED NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 
@@ -201,7 +243,9 @@ CREATE TABLE realestate_components (
     component_id BIGINT UNSIGNED NOT NULL,
     value VARCHAR(255) NOT NULL,
     FOREIGN KEY (realestate_id) REFERENCES realestates(id) ON DELETE CASCADE,
-    FOREIGN KEY (component_id) REFERENCES components(id) ON DELETE CASCADE
+    FOREIGN KEY (component_id) REFERENCES components(id) ON DELETE CASCADE,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 
@@ -211,12 +255,16 @@ CREATE TABLE orders (
     auction_id BIGINT UNSIGNED NOT NULL,
     status ENUM('pending', 'completed', 'cancelled') NOT NULL,
     FOREIGN KEY (admin_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (auction_id) REFERENCES auctions(id) ON DELETE CASCADE
+    FOREIGN KEY (auction_id) REFERENCES auctions(id) ON DELETE CASCADE,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE realestate_images_descriptions (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    description TEXT NOT NULL
+    description TEXT NOT NULL,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE realestate_images (
@@ -225,13 +273,17 @@ CREATE TABLE realestate_images (
     realestate_id BIGINT UNSIGNED,
     realestate_images_description_id BIGINT UNSIGNED,
     FOREIGN KEY (realestate_id) REFERENCES realestates(id) ON DELETE CASCADE,
-    FOREIGN KEY (realestate_images_description_id) REFERENCES realestate_images_descriptions(id) ON DELETE CASCADE
+    FOREIGN KEY (realestate_images_description_id) REFERENCES realestate_images_descriptions(id) ON DELETE CASCADE,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 
 CREATE TABLE realestate_features (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+    name VARCHAR(255) NOT NULL,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 
@@ -242,7 +294,9 @@ CREATE TABLE realestate_feature_options (
     realestate_feature_id BIGINT UNSIGNED NOT NULL,
     value BOOLEAN NOT NULL,
     FOREIGN KEY (realestate_id) REFERENCES realestates(id) ON DELETE CASCADE,
-    FOREIGN KEY (realestate_feature_id) REFERENCES realestate_features(id) ON DELETE CASCADE
+    FOREIGN KEY (realestate_feature_id) REFERENCES realestate_features(id) ON DELETE CASCADE,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- evaluations queries
@@ -252,7 +306,9 @@ CREATE TABLE comparisons_evaluations (
     meter_price DECIMAL(10, 2),
     total_price DECIMAL(10, 2),
     realestate_id BIGINT UNSIGNED NOT NULL,
-    FOREIGN KEY (realestate_id) REFERENCES realestates(id) ON DELETE CASCADE
+    FOREIGN KEY (realestate_id) REFERENCES realestates(id) ON DELETE CASCADE,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE direct_capitalization_evaluations (
@@ -265,12 +321,16 @@ CREATE TABLE direct_capitalization_evaluations (
     net_income DECIMAL(10, 2) NOT NULL,
     operation_cost DECIMAL(10, 2) NOT NULL,
     realestate_id BIGINT UNSIGNED NOT NULL,
-    FOREIGN KEY (realestate_id) REFERENCES realestates(id) ON DELETE CASCADE
+    FOREIGN KEY (realestate_id) REFERENCES realestates(id) ON DELETE CASCADE,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE comparisons_evaluation_properties (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     );
 
 CREATE TABLE comparisons_evaluation_realestates ( 
@@ -279,7 +339,8 @@ CREATE TABLE comparisons_evaluation_realestates (
     meter_price DECIMAL(10, 2), 
     weighted INT, 
     FOREIGN KEY (comparisons_evaluation_id) REFERENCES comparisons_evaluations(id) ON DELETE CASCADE, 
-    
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE comparisons_evaluation_realestates_properties (
@@ -289,7 +350,9 @@ CREATE TABLE comparisons_evaluation_realestates_properties (
     percentage INT NOT NULL,
     value VARCHAR(255) NOT NULL,
     FOREIGN KEY (comparisons_evaluation_properties_id) REFERENCES comparisons_evaluation_properties(id) ON DELETE CASCADE,
-    FOREIGN KEY (comparisons_evaluation_realestate_id) REFERENCES comparisons_evaluation_realestates(id) ON DELETE CASCADE
+    FOREIGN KEY (comparisons_evaluation_realestate_id) REFERENCES comparisons_evaluation_realestates(id) ON DELETE CASCADE,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE cost_evaluations (
@@ -298,14 +361,18 @@ CREATE TABLE cost_evaluations (
     total_cost DECIMAL(10, 2) NOT NULL,
     building_cost DECIMAL(10, 2) NOT NULL,
     building_cost_after_depreciation DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (realestate_id) REFERENCES realestates(id) ON DELETE CASCADE
+    FOREIGN KEY (realestate_id) REFERENCES realestates(id) ON DELETE CASCADE,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE direct_costs (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     cost_evaluation_id BIGINT UNSIGNED NOT NULL,
     direct_cost DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (cost_evaluation_id) REFERENCES cost_evaluations(id) ON DELETE CASCADE
+    FOREIGN KEY (cost_evaluation_id) REFERENCES cost_evaluations(id) ON DELETE CASCADE,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ); 
 
 CREATE TABLE direct_cost_components (
@@ -313,14 +380,18 @@ CREATE TABLE direct_cost_components (
     direct_cost_id BIGINT UNSIGNED NOT NULL,
     name VARCHAR(255) NOT NULL,
     meter_price DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (direct_cost_id) REFERENCES direct_costs(id) ON DELETE CASCADE
+    FOREIGN KEY (direct_cost_id) REFERENCES direct_costs(id) ON DELETE CASCADE,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE indirect_costs (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     cost_evaluation_id BIGINT UNSIGNED NOT NULL,
     indirect_cost DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (cost_evaluation_id) REFERENCES cost_evaluations(id) ON DELETE CASCADE
+    FOREIGN KEY (cost_evaluation_id) REFERENCES cost_evaluations(id) ON DELETE CASCADE,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE indirect_cost_components (
@@ -329,7 +400,9 @@ CREATE TABLE indirect_cost_components (
     name VARCHAR(255) NOT NULL,
     percentage INT,
     price DECIMAL(10, 2),
-    FOREIGN KEY (indirect_cost_id) REFERENCES indirect_costs(id) ON DELETE CASCADE
+    FOREIGN KEY (indirect_cost_id) REFERENCES indirect_costs(id) ON DELETE CASCADE,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE depreciations (
@@ -340,5 +413,7 @@ CREATE TABLE depreciations (
     type ENUM('Straight Line', 'Double Declining Balance') NOT NULL,
     depreciation_rate INT NOT NULL,
     depreciation_value DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (cost_evaluation_id) REFERENCES cost_evaluations(id) ON DELETE CASCADE
+    FOREIGN KEY (cost_evaluation_id) REFERENCES cost_evaluations(id) ON DELETE CASCADE,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

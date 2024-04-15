@@ -108,9 +108,9 @@ exports.createComparisonsEvaluation = asyncWrapper(async (req, res, next) => {
         comparisonsEvaluationRealestatesData =
           await comparisons_evaluation_realestates.create({
             comparisons_evaluation_id: comparisonsEvaluationsData.id,
-            weighted: comparisons[counter][nestedCounter].percentage,
+            weighted: +comparisons[counter][nestedCounter].percentage,
             meter_price:
-              comparisons[counter][nestedCounter - nestedCounter].percentage,
+              +comparisons[counter][nestedCounter - nestedCounter].percentage,
           });
       } else {
         await comparisons_evaluation_realestates_properties.create({
@@ -118,7 +118,7 @@ exports.createComparisonsEvaluation = asyncWrapper(async (req, res, next) => {
             comparisonsEvaluationRealestatesData.id,
           comparisons_evaluation_properties_id: propertiesData[nestedCounter],
           value: comparisons[counter][nestedCounter].value,
-          percentage: comparisons[counter][nestedCounter].percentage,
+          percentage: +comparisons[counter][nestedCounter].percentage,
         });
       }
       coun++;
