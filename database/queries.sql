@@ -85,7 +85,6 @@ CREATE TABLE role_permissions (
 
 -- auctions queries
 
--- Create auctions table
 CREATE TABLE auctions (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     assignment_number VARCHAR(255) NOT NULL,
@@ -99,7 +98,6 @@ CREATE TABLE auctions (
     updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Create realestate_types table
 CREATE TABLE realestate_types (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -107,8 +105,6 @@ CREATE TABLE realestate_types (
     updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-
--- Create realestates table
 CREATE TABLE realestates (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     customer_name VARCHAR(255) NOT NULL,
@@ -121,7 +117,6 @@ CREATE TABLE realestates (
     updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Create realestate_documents table
 CREATE TABLE realestate_documents (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     number VARCHAR(255) NOT NULL,
@@ -135,7 +130,6 @@ CREATE TABLE realestate_documents (
     updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Create areas table
 CREATE TABLE areas (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -143,7 +137,6 @@ CREATE TABLE areas (
     updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Create cities table
 CREATE TABLE cities (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -153,7 +146,6 @@ CREATE TABLE cities (
     updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Create realestate_licenses table
 CREATE TABLE realestate_licenses (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     number INTEGER NOT NULL,
@@ -169,7 +161,6 @@ CREATE TABLE realestate_licenses (
     updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Create quarter table
 CREATE TABLE quarters (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -179,7 +170,6 @@ CREATE TABLE quarters (
     updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Create realestate_owners table
 CREATE TABLE realestate_owners (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -192,7 +182,6 @@ CREATE TABLE realestate_owners (
     updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Create realestate_files table
 CREATE TABLE realestate_files (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -220,9 +209,19 @@ CREATE TABLE scans (
 CREATE TABLE realestate_properties (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    string_value VARCHAR(255),
+    value VARCHAR(255),
+    type ENUM('text', 'single', 'multi') NOT NULL,
     realestate_id BIGINT UNSIGNED NOT NULL,
     FOREIGN KEY (realestate_id) REFERENCES realestates(id) ON DELETE CASCADE,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE realestate_properties_options (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    realestate_property_id BIGINT UNSIGNED NOT NULL,
+    FOREIGN KEY (realestate_property_id) REFERENCES realestate_properties(id) ON DELETE CASCADE,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -316,7 +315,6 @@ CREATE TABLE direct_capitalization_evaluations (
     cross_income DECIMAL(10, 2) NOT NULL,
     operation_income_rate INT NOT NULL,
     capitalization_rate INT NOT NULL,
-    ownership_percentage INT NOT NULL,
     realestate_total_value DECIMAL(10, 2) NOT NULL,
     net_income DECIMAL(10, 2) NOT NULL,
     operation_cost DECIMAL(10, 2) NOT NULL,
