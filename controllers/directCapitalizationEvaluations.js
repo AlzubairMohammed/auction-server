@@ -30,24 +30,18 @@ exports.createDirectCapitalizationEvaluation = asyncWrapper(
       operation_cost,
       realestate_id,
     });
-    return res.json({ status: httpStatus.SUCCESS, realestate_total_value });
+    return res.json({ status: httpStatus.SUCCESS, data });
   }
 );
 
 exports.getDirectCapitalizationEvaluations = asyncWrapper(async (req, res) => {
-  let data = await direct_capitalization_evaluations.findAll();
+  let data = await direct_capitalization_evaluations?.findAll();
   return res.json({ status: httpStatus.SUCCESS, data });
 });
 
 exports.getDirectCapitalizationEvaluation = asyncWrapper(async (req, res) => {
   let data = await direct_capitalization_evaluations.findOne({
-    where: { id: req.params.id },
-    include: [
-      {
-        model: quarters,
-        as: "quarters",
-      },
-    ],
+    where: { id: req?.params?.id },
   });
   return res.json({ status: httpStatus.SUCCESS, data });
 });
