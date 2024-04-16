@@ -2,17 +2,22 @@ const { body } = require("express-validator");
 
 exports.directCapitalizationEvaluationValidator = () => {
   return [
-    body("crossIncome")
+    body("cross_income")
       .notEmpty()
       .withMessage("Field is required .")
       .isDecimal()
       .withMessage("Field must be a float."),
-    body("operationPercentage")
+    body("operation_income_rate")
       .notEmpty()
       .withMessage("Field is required .")
       .isInt()
       .withMessage("Field must be a number."),
-    body("capitalizationPercentage")
+    body("capitalization_rate")
+      .notEmpty()
+      .withMessage("Field is required .")
+      .isInt()
+      .withMessage("Field must be a number."),
+    body("realestate_id")
       .notEmpty()
       .withMessage("Field is required .")
       .isInt()
