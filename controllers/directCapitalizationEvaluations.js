@@ -12,8 +12,13 @@ exports.createDirectCapitalizationEvaluation = asyncWrapper(
       const error = errorResponse.create(errors.array(), 400, httpStatus.FAIL);
       return next(error);
     }
-    let data = await direct_capitalization_evaluations.create(req.body);
-    return res.json({ status: httpStatus.SUCCESS, data });
+    const { crossIncome, operationPercentage, capitalizationPercentage } =
+      req.body;
+    const operationCost = (operationPercentage / 100) * crossIncome;
+    const netIncome = crossIncome - operationCost;
+    const totalValue = (netIncome / capitalizationPercentage) * 100;
+    // let data = await direct_capitalization_evaluations.create(req.body);
+    return res.json({ status: httpStatus.SUCCESS, totalValue });
   }
 );
 
