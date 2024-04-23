@@ -14,7 +14,9 @@ const {
 
 exports.createRealestate = asyncWrapper(async (req, res, next) => {
   req.body = convertFormData(req.body);
-  req.body.owners = Object.values(req.body.owners);
+  if (req.body.owners) {
+    req.body.owners = Object.values(req.body.owners);
+  }
   req.files = Object.values(req.files);
   const fileNames = req.body.filesNames;
   let counter = 0;
@@ -64,10 +66,7 @@ exports.createRealestate = asyncWrapper(async (req, res, next) => {
     await realestate_owners.bulkCreate(
       owners.map((owner) => ({
         realestate_id: data.id,
-        name: owner.name,
-        identity_number: owner.identity_number,
-        nationality: owner.nationality,
-        ownership_percentage: owner.ownership_percentage,
+        ...owner,
       }))
     );
   }

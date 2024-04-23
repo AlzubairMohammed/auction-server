@@ -44,3 +44,10 @@ exports.deleteCity = asyncWrapper(async (req, res) => {
   let data = await cities.destroy({ where: { id: req.params.id } });
   return res.json({ status: httpStatus.SUCCESS, data });
 });
+
+exports.getCitiesByArea = asyncWrapper(async (req, res) => {
+  let data = await cities.findAll({
+    where: { area_id: req.params.id },
+  });
+  return res.json({ status: httpStatus.SUCCESS, data });
+});

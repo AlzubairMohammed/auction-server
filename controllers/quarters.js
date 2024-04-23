@@ -38,3 +38,10 @@ exports.deleteQuarter = asyncWrapper(async (req, res) => {
   let data = await quarters.destroy({ where: { id: req.params.id } });
   return res.json({ status: httpStatus.SUCCESS, data });
 });
+
+exports.getQuartersByCity = asyncWrapper(async (req, res) => {
+  let data = await quarters.findAll({
+    where: { city_id: req.params.id },
+  });
+  return res.json({ status: httpStatus.SUCCESS, data });
+});

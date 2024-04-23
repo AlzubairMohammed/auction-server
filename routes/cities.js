@@ -6,6 +6,7 @@ const {
   createCity,
   editCity,
   deleteCity,
+  getCitiesByArea,
 } = require("../controllers/cities");
 
 router
@@ -13,6 +14,7 @@ router
   .get("/", getCities)
   .get("/:id", getCity)
   .put("/:id", editCity)
-  .delete("/:id", deleteCity);
+  .delete("/:id", deleteCity)
+  .get("/area/:id", getCitiesByArea);
 
 module.exports = router;

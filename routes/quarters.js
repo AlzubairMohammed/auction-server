@@ -6,6 +6,7 @@ const {
   editQuarter,
   deleteQuarter,
   createQuarter,
+  getQuartersByCity,
 } = require("../controllers/quarters");
 
 router
@@ -13,6 +14,7 @@ router
   .get("/", getQuarters)
   .get("/:id", getQuarter)
   .put("/:id", editQuarter)
-  .delete("/:id", deleteQuarter);
+  .delete("/:id", deleteQuarter)
+  .get("/city/:id", getQuartersByCity);
 
 module.exports = router;
