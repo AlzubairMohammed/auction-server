@@ -135,6 +135,7 @@ CREATE TABLE realestate_documents (
     south_space INT NOT NULL,
     note TEXT,
     path VARCHAR(255),
+    date TIMESTAMP NOT NULL,
     realestate_id BIGINT UNSIGNED NOT NULL,
     FOREIGN KEY (realestate_id) REFERENCES realestates(id),
     FOREIGN KEY (quarter_id) REFERENCES quarters(id),
