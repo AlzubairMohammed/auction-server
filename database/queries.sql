@@ -223,7 +223,7 @@ CREATE TABLE scans (
 CREATE TABLE properties (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    type ENUM('text', 'single', 'multi') NOT NULL,
+    type ENUM('text', 'single', 'multiple') NOT NULL,
     user_id BIGINT UNSIGNED,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
