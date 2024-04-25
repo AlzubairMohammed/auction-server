@@ -3,6 +3,7 @@ const { models } = require("../database/connection");
 const httpStatus = require("../utils/httpStatus.js");
 const errorResponse = require("../utils/errorResponse");
 const { validationResult } = require("express-validator");
+const { convertFormData } = require("../utils/convertFormData.js");
 const {
   scans,
   realestate_properties,
