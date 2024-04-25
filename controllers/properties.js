@@ -32,9 +32,12 @@ exports.getProperty = asyncWrapper(async (req, res) => {
 });
 
 exports.createProperty = asyncWrapper(async (req, res, next) => {
-  req.body = convertFormData(req.body);
+  let options;
+  if (req.body.options) {
+    req.body = convertFormData(req.body);
+    options = Object.values(req.body.options);
+  }
   let data;
-  let options = Object.values(req.body.options);
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
