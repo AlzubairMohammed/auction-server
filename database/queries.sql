@@ -264,6 +264,7 @@ CREATE TABLE realestate_components (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     realestate_id BIGINT UNSIGNED NOT NULL,
     component_id BIGINT UNSIGNED NOT NULL,
+    isFeature BOOLEAN DEFAULT 0,
     value VARCHAR(255) NOT NULL,
     FOREIGN KEY (realestate_id) REFERENCES realestates(id) ON DELETE CASCADE,
     FOREIGN KEY (component_id) REFERENCES components(id) ON DELETE CASCADE,
