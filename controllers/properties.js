@@ -4,6 +4,7 @@ const httpStatus = require("../utils/httpStatus.js");
 const errorResponse = require("../utils/errorResponse");
 const { validationResult } = require("express-validator");
 const { properties, properties_options } = models;
+const { convertFormData } = require("../utils/convertFormData.js");
 
 exports.getProperties = asyncWrapper(async (req, res) => {
   let data = await properties.findAll({
@@ -31,9 +32,10 @@ exports.getProperty = asyncWrapper(async (req, res) => {
 });
 
 exports.createProperty = asyncWrapper(async (req, res, next) => {
-  let transaction;
+  req.body = convertFormData(req.body);
   let data;
-  let options = req.body.options;
+  let options = Object.values(req.body.options);
+
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = errorResponse.create(errors.array(), 400, httpStatus.FAIL);
@@ -42,15 +44,17 @@ exports.createProperty = asyncWrapper(async (req, res, next) => {
   try {
     transaction = await sequelize.transaction();
     data = await properties.create(req.body, { transaction });
-    options = options.map((option) => {
-      option.property_id = data.id;
-      return option;
-    });
-    const optionData = await properties_options.bulkCreate(options, {
-      transaction,
-    });
+    if (options) {
+      options = options.map((option) => {
+        option.property_id = data.id;
+        return option;
+      });
+      const optionData = await properties_options.bulkCreate(options, {
+        transaction,
+      });
+    }
     await transaction.commit();
-    return res.json({ status: httpStatus.SUCCESS, data, optionData });
+    return res.json({ status: httpStatus.SUCCESS, data });
   } catch (error) {
     if (transaction) {
       await transaction.rollback();
