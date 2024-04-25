@@ -40,7 +40,8 @@ exports.createRealestate = asyncWrapper(async (req, res, next) => {
             name: fileNames[counter++].name,
             path: file.name,
           });
-          const filePath = `uploads/realestates/${file.name}`;
+          const dateNow = new Date().toISOString().replace(/[:\.]/g, "-");
+          const filePath = `uploads/realestates/${dateNow}-${file.name}`;
           await file.mv(filePath);
         })
       );
