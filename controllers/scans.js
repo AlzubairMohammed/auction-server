@@ -1,5 +1,5 @@
 const asyncWrapper = require("../middlewares/asyncWrapper.js");
-const { models } = require("../database/connection");
+const { models, sequelize } = require("../database/connection");
 const httpStatus = require("../utils/httpStatus.js");
 const errorResponse = require("../utils/errorResponse");
 const { validationResult } = require("express-validator");
@@ -9,6 +9,8 @@ const {
   realestate_properties,
   realestate_components,
   realestate_images,
+  realestates,
+  realestate_images_descriptions,
 } = models;
 
 exports.getScans = asyncWrapper(async (req, res) => {
@@ -19,6 +21,24 @@ exports.getScans = asyncWrapper(async (req, res) => {
 exports.getScan = asyncWrapper(async (req, res) => {
   let data = await scans.findOne({
     where: { id: req.params.id },
+    include: [
+      {
+        model: realestates,
+        as: "realestate",
+        include: {
+          model: realestate_properties,
+          as: "realestate_properties",
+          model: realestate_components,
+          as: "realestate_components",
+          model: realestate_images,
+          as: "realestate_images",
+          include: {
+            model: realestate_images_descriptions,
+            as: "realestate_images_description",
+          },
+        },
+      },
+    ],
   });
   return res.json({ status: httpStatus.SUCCESS, data });
 });
@@ -28,10 +48,10 @@ exports.createScan = asyncWrapper(async (req, res, next) => {
   if (req.body.properties) {
     req.body.properties = Object.values(req.body.properties);
   }
-  req.images = Object.values(req.images);
+  req.files = Object.values(req.files);
   const imagesNames = req.body.imagesNames;
   let counter = 0;
-  const transaction = await models.sequelize.transaction();
+  const transaction = await sequelize.transaction();
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = errorResponse.create(errors.array(), 400, httpStatus.FAIL);
@@ -43,9 +63,8 @@ exports.createScan = asyncWrapper(async (req, res, next) => {
       req.body.properties.map(async (property) => {
         await realestate_properties.create({
           realestate_id: req.body.realestate_id,
-          property_id: property.property_id,
+          property_id: property.id,
           value: property.value,
-          isFeature: property.isFeature,
         });
       })
     );
@@ -57,18 +76,20 @@ exports.createScan = asyncWrapper(async (req, res, next) => {
           realestate_id: req.body.realestate_id,
           component_id: component.component_id,
           value: component.value,
-          isFeature: component.isFeature,
         });
       })
     );
   }
-  if (req.images) {
-    if (Array.isArray(req.images)) {
+  if (req.files) {
+    if (Array.isArray(req.files)) {
       await Promise.all(
-        req.images.map(async (file) => {
+        req.files.map(async (file) => {
+          const desData = await realestate_images_descriptions.create({
+            description: imagesNames[counter++].name,
+          });
           await realestate_images.create({
             realestate_id: req.body.realestate_id,
-            name: imagesNames[counter++].name,
+            realestate_images_description_id: desData.id,
             path: file.name,
           });
           const dateNow = new Date().toISOString().replace(/[:\.]/g, "-");
@@ -77,10 +98,13 @@ exports.createScan = asyncWrapper(async (req, res, next) => {
         })
       );
     } else {
-      const file = req.images;
+      const file = req.files;
+      const desData = await realestate_images_descriptions.create({
+        description: imagesNames[counter++].name,
+      });
       await realestate_images.create({
         realestate_id: req.body.realestate_id,
-        name: imagesNames[counter++].name,
+        realestate_images_description_id: desData.id,
         path: file.name,
       });
     }
