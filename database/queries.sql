@@ -225,6 +225,7 @@ CREATE TABLE properties (
     name VARCHAR(255) NOT NULL,
     type ENUM('text', 'single', 'multiple') NOT NULL,
     user_id BIGINT UNSIGNED,
+     isFeature BOOLEAN DEFAULT 0,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -235,7 +236,6 @@ CREATE TABLE realestate_properties (
     realestate_id BIGINT UNSIGNED NOT NULL,
     property_id BIGINT UNSIGNED NOT NULL,
     value VARCHAR(255),
-    isFeature BOOLEAN DEFAULT 0,
     FOREIGN KEY (realestate_id) REFERENCES realestates(id) ON DELETE CASCADE,
     FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
