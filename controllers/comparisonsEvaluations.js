@@ -3,6 +3,7 @@ const { models } = require("../database/connection");
 const httpStatus = require("../utils/httpStatus.js");
 const errorResponse = require("../utils/errorResponse");
 const { validationResult } = require("express-validator");
+const { convertFormData } = require("../utils/convertFormData.js");
 const {
   comparisons_evaluations,
   comparisons_evaluation_properties,
@@ -41,6 +42,7 @@ exports.getComparisonsEvaluation = asyncWrapper(async (req, res) => {
 });
 
 exports.createComparisonsEvaluation = asyncWrapper(async (req, res, next) => {
+  // req.body = convertFormData(req.body);
   let comparisons = req.body.comparisons;
   let properties = req.body.properties;
   let realestateData = req.body.realestate;
