@@ -1,5 +1,7 @@
 const router = require("express").Router();
 const { auctionsValidator } = require("../validations/auctions");
+const verfiyToken = require("../middlewares/userVerifyToken");
+const permissions = require("../middlewares/permissions");
 const {
   getAuctions,
   getAuction,
@@ -11,9 +13,9 @@ const {
 } = require("../controllers/auctions");
 
 router
-  .post("/", auctionsValidator(), createAuction)
+  .get("/", verfiyToken, permissions("pr1"), getAuctions)
   .get("/:id", getAuction)
-  .get("/", getAuctions)
+  .post("/", auctionsValidator(), createAuction)
   .delete("/:id", deleteAuction)
   .put("/:id", editAuction)
   .post("/search", search)
