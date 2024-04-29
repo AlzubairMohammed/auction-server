@@ -72,6 +72,10 @@ exports.createUser = asyncWrapper(async (req, res, next) => {
   }
   req.body.password = await bcrypt.hash(password, 10);
   const data = await users.create(req.body);
+  await user_roles.create({
+    user_id: data.id,
+    role_id: req.body.role_id,
+  });
   const token = await jwt({
     email: data.email,
     id: data.id,
