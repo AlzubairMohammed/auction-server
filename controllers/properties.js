@@ -33,12 +33,11 @@ exports.getProperty = asyncWrapper(async (req, res) => {
 
 exports.createProperty = asyncWrapper(async (req, res, next) => {
   let options;
-  if (req.body.options) {
+  if (req.body["options[0][name]"]) {
     req.body = convertFormData(req.body);
     options = Object.values(req.body.options);
   }
   let data;
-
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = errorResponse.create(errors.array(), 400, httpStatus.FAIL);
