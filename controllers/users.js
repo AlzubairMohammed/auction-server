@@ -3,7 +3,7 @@ const asyncWrapper = require("../middlewares/asyncWrapper");
 const errorResponse = require("../utils/errorResponse");
 const { validationResult } = require("express-validator");
 const { models } = require("../database/connection");
-const { users } = models;
+const { users, user_roles, role_permissions, permissions, roles } = models;
 const bcrypt = require("bcryptjs");
 const jwt = require("../utils/jwt");
 
@@ -22,6 +22,30 @@ exports.getUser = asyncWrapper(async (req, res, next) => {
     attributes: {
       exclude: ["password"],
     },
+    include: [
+      {
+        model: user_roles,
+        as: "user_roles",
+        include: [
+          {
+            model: roles,
+            as: "role",
+            include: [
+              {
+                model: role_permissions,
+                as: "role_permissions",
+                include: [
+                  {
+                    model: permissions,
+                    as: "permission",
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
   });
   return res.json({ status: httpStatus.SUCCESS, data });
 });

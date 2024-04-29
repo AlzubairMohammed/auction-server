@@ -17,6 +17,7 @@ const comparisonsEvaluations = require("./routes/comparisonsEvaluations");
 const directCapitalizationEvaluations = require("./routes/directCapitalizationEvaluations");
 const properties = require("./routes/properties");
 const realestateComponents = require("./routes/realestateComponents");
+const permissions = require("./routes/permissions");
 const httpStatus = require("./utils/httpStatus");
 const fileEasyUpload = require("express-easy-fileuploader");
 app.use(express.json());
@@ -57,6 +58,7 @@ app.use(
 );
 app.use(`${URL}/properties`, properties);
 app.use(`${URL}/realestateComponents`, realestateComponents);
+app.use(`${URL}/permissions`, permissions);
 
 app.use(express.static("."));
 // global error handler

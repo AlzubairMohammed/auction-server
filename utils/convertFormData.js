@@ -14,7 +14,7 @@ exports.convertFormData = (data) => {
       }
       obj = obj[keys[i]];
     }
-    obj[keys[keys.length - 1]] = reqData[key]?.trim();
+    obj[keys[keys.length - 1]] = reqData[key].trim();
   }
   return convertedData;
 };
