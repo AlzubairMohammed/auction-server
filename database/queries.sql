@@ -436,6 +436,7 @@ CREATE TABLE depreciations (
     type ENUM('Straight Line', 'Double Declining Balance') NOT NULL,
     depreciation_rate INT NOT NULL,
     depreciation_value DECIMAL(10, 2) NOT NULL,
+    realestate_expanded_life_span INT,
     FOREIGN KEY (cost_evaluation_id) REFERENCES cost_evaluations(id) ON DELETE CASCADE,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

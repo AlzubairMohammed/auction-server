@@ -13,7 +13,8 @@ const {
 } = require("../controllers/auctions");
 
 router
-  .get("/", verfiyToken, permissions("pr1"), getAuctions)
+  // .get("/", verfiyToken, permissions("pr1"), getAuctions)
+  .get("/", getAuctions)
   .get("/:id", getAuction)
   .post("/", auctionsValidator(), createAuction)
   .delete("/:id", deleteAuction)
