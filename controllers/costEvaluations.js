@@ -20,6 +20,32 @@ exports.getCostEvaluations = asyncWrapper(async (req, res) => {
 exports.getCostEvaluation = asyncWrapper(async (req, res) => {
   let data = await cost_evaluations.findOne({
     where: { id: req.params.id },
+    include: [
+      {
+        model: direct_costs,
+        as: "direct_costs",
+        include: [
+          {
+            model: direct_cost_components,
+            as: "direct_cost_components",
+          },
+        ],
+      },
+      {
+        model: indirect_costs,
+        as: "indirect_costs",
+        include: [
+          {
+            model: indirect_cost_components,
+            as: "indirect_cost_components",
+          },
+        ],
+      },
+      {
+        model: depreciations,
+        as: "depreciations",
+      },
+    ],
   });
   return res.json({ status: httpStatus.SUCCESS, data });
 });
@@ -71,18 +97,6 @@ exports.createCostEvaluation = asyncWrapper(async (req, res, next) => {
     realestateCostAfterDepreciation =
       indirectCostTotal + directCostTotal - depreciationCost;
   }
-
-  //   return res.status(500).json({
-  //     status: httpStatus.SUCCESS,
-  //     directCostOperations,
-  //     indirectCostOperations,
-  //     directCostTotal,
-  //     indirectCostTotal,
-  //     depreciationRateValue,
-  //     depreciationCost,
-  //     realestateCostAfterDepreciation,
-  //   });
-
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = errorResponse.create(errors.array(), 400, httpStatus.FAIL);
@@ -131,8 +145,8 @@ exports.createCostEvaluation = asyncWrapper(async (req, res, next) => {
         {
           indirect_cost_id: indirectCostData.id,
           name: item.name,
-          precentage: item.costType === "percentage" ? item.precentage : null,
-          price: item.costType === "percentage" ? item.precentage : null,
+          percentage: item.costType === "percentage" ? item.precentage : null,
+          price: item.costType === "price" ? item.precentage : null,
         },
         { transaction }
       );
@@ -153,14 +167,17 @@ exports.createCostEvaluation = asyncWrapper(async (req, res, next) => {
     { transaction }
   );
   transaction.commit();
-  return res.json({ status: httpStatus.SUCCESS, data });
+  return res.status(500).json({ status: httpStatus.SUCCESS, depreciationData });
 });
 
 exports.editCostEvaluation = asyncWrapper(async (req, res) => {
   let data = await cost_evaluations.update(req.body, {
     where: { id: req.params.id },
   });
-  return res.json({ status: httpStatus.SUCCESS, data });
+  return res.json({
+    status: httpStatus.SUCCESS,
+    directCostData,
+  });
 });
 
 exports.deleteCostEvaluation = asyncWrapper(async (req, res) => {
