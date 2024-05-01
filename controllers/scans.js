@@ -81,32 +81,35 @@ exports.createScan = asyncWrapper(async (req, res, next) => {
     );
   }
   if (req.files) {
-    if (Array.isArray(req.files)) {
+    if (Array.isArray(req.files[0])) {
       await Promise.all(
-        req.files.map(async (file) => {
+        req.files[0].map(async (file) => {
+          const dateNow = new Date().toISOString().replace(/[:\.]/g, "-");
+          const filePath = `uploads/realestates/${dateNow}-${file.name}`;
           const desData = await realestate_images_descriptions.create({
             description: imagesNames[counter++].name,
           });
           await realestate_images.create({
             realestate_id: req.body.realestate_id,
             realestate_images_description_id: desData.id,
-            path: file.name,
+            path: filePath,
           });
-          const dateNow = new Date().toISOString().replace(/[:\.]/g, "-");
-          const filePath = `uploads/realestates/${dateNow}-${file.name}`;
           await file.mv(filePath);
         })
       );
     } else {
-      const file = req.files;
+      const file = req.files[0];
+      const dateNow = new Date().toISOString().replace(/[:\.]/g, "-");
+      const filePath = `uploads/realestates/${dateNow}-${file.name}`;
       const desData = await realestate_images_descriptions.create({
         description: imagesNames[counter++].name,
       });
       await realestate_images.create({
         realestate_id: req.body.realestate_id,
         realestate_images_description_id: desData.id,
-        path: file.name,
+        path: filePath,
       });
+      await file.mv(filePath);
     }
   }
   await transaction.commit();

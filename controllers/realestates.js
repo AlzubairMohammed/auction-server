@@ -1,5 +1,5 @@
 const asyncWrapper = require("../middlewares/asyncWrapper.js");
-const { models } = require("../database/connection");
+const { models, sequelize } = require("../database/connection");
 const httpStatus = require("../utils/httpStatus.js");
 const errorResponse = require("../utils/errorResponse");
 const { validationResult } = require("express-validator");
@@ -13,6 +13,7 @@ const {
 } = models;
 
 exports.createRealestate = asyncWrapper(async (req, res, next) => {
+  const transaction = await sequelize.transaction();
   req.body = convertFormData(req.body);
   if (req.body.owners) {
     req.body.owners = Object.values(req.body.owners);
@@ -29,51 +30,60 @@ exports.createRealestate = asyncWrapper(async (req, res, next) => {
   const { owners, document } = req.body;
   // create realestate
 
-  let data = await realestates.create(req.body);
+  let data = await realestates.create(req.body, { transaction });
   // upload files
   if (req.files) {
     if (Array.isArray(req.files)) {
       await Promise.all(
         req.files.map(async (file) => {
-          await realestate_files.create({
-            realestate_id: data.id,
-            name: fileNames[counter++].name,
-            path: file.name,
-          });
           const dateNow = new Date().toISOString().replace(/[:\.]/g, "-");
-          const filePath = `uploads/realestates/${dateNow}-${file.name}`;
-          await file.mv(filePath);
+          const filePath = `uploads/realestates/${dateNow}-${file[0].name}`;
+          await realestate_files.create(
+            {
+              realestate_id: data.id,
+              name: filePath,
+              path: file[0].name,
+            },
+            { transaction }
+          );
+          await file[0].mv(filePath);
         })
       );
     } else {
       const file = req.files;
-      await realestate_files.create({
-        realestate_id: data.id,
-        name: fileNames[counter++].name,
-        path: file.name,
-      });
+      await realestate_files.create(
+        {
+          realestate_id: data.id,
+          name: fileNames[counter++].name,
+          path: file.name,
+        },
+        { transaction }
+      );
     }
   }
   // create realestate document
   if (document) {
     document.realestate_id = data.id;
-    await realestate_documents.create(document);
+    await realestate_documents.create(document, { transaction });
   }
   // create realestate license
   req.body.license.realestate_id = data.id;
-  await realestate_licenses.create(req.body.license);
+  await realestate_licenses.create(req.body.license, { transaction });
   // create realestate owners
   if (owners) {
     await realestate_owners.bulkCreate(
-      owners.map((owner) => ({
-        realestate_id: data.id,
-        ...owner,
-      }))
+      owners.map(
+        (owner) => ({
+          realestate_id: data.id,
+          ...owner,
+        }),
+        { transaction }
+      )
     );
   }
   // create realestate document
-
-  return res.json({ status: httpStatus.SUCCESS, data });
+  transaction.commit();
+  return res.status(500).json({ status: httpStatus.SUCCESS, data });
 });
 
 exports.getRealestates = asyncWrapper(async (req, res) => {
