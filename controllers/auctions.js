@@ -4,7 +4,15 @@ const httpStatus = require("../utils/httpStatus.js");
 const errorResponse = require("../utils/errorResponse");
 const { validationResult } = require("express-validator");
 const { Op } = require("sequelize");
-const { auctions, users, realestates } = models;
+const {
+  auctions,
+  users,
+  realestates,
+  realestate_properties,
+  realestate_components,
+  realestate_images,
+  realestate_images_descriptions,
+} = models;
 
 exports.createAuction = asyncWrapper(async (req, res, next) => {
   const errors = validationResult(req);
@@ -26,7 +34,22 @@ exports.getAuctions = asyncWrapper(async (req, res) => {
 exports.getAuction = asyncWrapper(async (req, res) => {
   let data = await auctions.findOne({
     where: { id: req.params.id },
-    include: { model: realestates, as: "realestates" },
+    include: {
+      model: realestates,
+      as: "realestates",
+      include: {
+        model: realestate_properties,
+        as: "realestate_properties",
+        model: realestate_components,
+        as: "realestate_components",
+        model: realestate_images,
+        as: "realestate_images",
+        include: {
+          model: realestate_images_descriptions,
+          as: "realestate_images_description",
+        },
+      },
+    },
   });
   return res.json({ status: httpStatus.SUCCESS, data });
 });

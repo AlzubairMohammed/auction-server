@@ -167,7 +167,7 @@ exports.createCostEvaluation = asyncWrapper(async (req, res, next) => {
     { transaction }
   );
   transaction.commit();
-  return res.status(500).json({ status: httpStatus.SUCCESS, depreciationData });
+  return res.json({ status: httpStatus.SUCCESS, depreciationData });
 });
 
 exports.editCostEvaluation = asyncWrapper(async (req, res) => {
