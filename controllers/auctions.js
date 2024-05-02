@@ -27,7 +27,15 @@ exports.createAuction = asyncWrapper(async (req, res, next) => {
 exports.getAuctions = asyncWrapper(async (req, res) => {
   const limit = +req.query.limit || 100;
   const offset = +req.query.offset || 0;
-  let data = await auctions.findAll({ limit, offset });
+  let whereClause = {};
+  if (req.query.key && req.query.value) {
+    whereClause[req.query.key] = { [Op.like]: `%${req.query.value}%` };
+  }
+  let data = await auctions.findAll({
+    where: whereClause,
+    limit,
+    offset,
+  });
   return res.json({ status: httpStatus.SUCCESS, data });
 });
 
