@@ -1,5 +1,6 @@
 const asyncWrapper = require("../middlewares/asyncWrapper.js");
 const { models, sequelize } = require("../database/connection");
+const { Op } = require("sequelize");
 const httpStatus = require("../utils/httpStatus.js");
 const errorResponse = require("../utils/errorResponse");
 const { validationResult } = require("express-validator");
@@ -87,7 +88,39 @@ exports.createRealestate = asyncWrapper(async (req, res, next) => {
 });
 
 exports.getRealestates = asyncWrapper(async (req, res) => {
-  let data = await realestates.findAll();
+  const limit = +req.query.limit || 100;
+  const offset = +req.query.offset || 0;
+  let whereClause = {};
+  if (req.query.key && req.query.value) {
+    whereClause[req.query.key] = { [Op.like]: `%${req.query.value}%` };
+  }
+  let data = await realestates.findAll(
+    {
+      include: [
+        {
+          model: realestate_owners,
+          as: "realestate_owners",
+        },
+        {
+          model: realestate_licenses,
+          as: "realestate_licenses",
+        },
+        {
+          model: realestate_documents,
+          as: "realestate_documents",
+        },
+        {
+          model: realestate_files,
+          as: "realestate_files",
+        },
+      ],
+    },
+    {
+      where: whereClause,
+      limit,
+      offset,
+    }
+  );
   return res.json({ status: httpStatus.SUCCESS, data });
 });
 
