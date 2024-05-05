@@ -84,7 +84,7 @@ exports.createRealestate = asyncWrapper(async (req, res, next) => {
   }
   // create realestate document
   transaction.commit();
-  return res.status(500).json({ status: httpStatus.SUCCESS, data });
+  return res.json({ status: httpStatus.SUCCESS, data });
 });
 
 exports.getRealestates = asyncWrapper(async (req, res) => {
