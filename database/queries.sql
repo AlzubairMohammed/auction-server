@@ -122,9 +122,9 @@ CREATE TABLE realestate_documents (
     number VARCHAR(255) NOT NULL,
     area_number VARCHAR(255) NOT NULL,
     block_number VARCHAR(255) NOT NULL,
-    graph_number VARCHAR(255 NOT NULL),
+    graph_number VARCHAR(255) NOT NULL,
     space VARCHAR(255) NOT NULL,
-    quarter_id INT NOT NULL,
+    quarter_id BIGINT UNSIGNED NOT NULL,
     north_desc VARCHAR(255) NOT NULL,
     north_space INT NOT NULL,
     west_desc VARCHAR(255) NOT NULL,
@@ -246,7 +246,7 @@ CREATE TABLE properties_options (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     property_id BIGINT UNSIGNED NOT NULL,
-    FOREIGN KEY (realestate_property_id) REFERENCES realestate_properties(id) ON DELETE CASCADE,
+    FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
