@@ -96,6 +96,11 @@ exports.getRealestates = asyncWrapper(async (req, res) => {
   }
   let data = await realestates.findAll(
     {
+      where: whereClause,
+      limit,
+      offset,
+    },
+    {
       include: [
         {
           model: realestate_owners,
@@ -114,11 +119,6 @@ exports.getRealestates = asyncWrapper(async (req, res) => {
           as: "realestate_files",
         },
       ],
-    },
-    {
-      where: whereClause,
-      limit,
-      offset,
     }
   );
   return res.json({ status: httpStatus.SUCCESS, data });
