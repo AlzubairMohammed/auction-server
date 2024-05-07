@@ -180,3 +180,10 @@ exports.deleteRealestate = asyncWrapper(async (req, res) => {
   let data = await realestates.destroy({ where: { id: req.params.id } });
   return res.json({ status: httpStatus.SUCCESS, data });
 });
+
+exports.getNotEvaluatedRealestates = asyncWrapper(async (req, res) => {
+  let data = await realestates.findAll({
+    where: { is_evaluated: false },
+  });
+  return res.json({ status: httpStatus.SUCCESS, data });
+});

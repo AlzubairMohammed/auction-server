@@ -6,9 +6,11 @@ const {
   createRealestate,
   editRealestate,
   deleteRealestate,
+  getNotEvaluatedRealestates,
 } = require("../controllers/realestates");
 
 router
+  .get("/notEvaluated", getNotEvaluatedRealestates)
   .post("/", realestateValidator(), createRealestate)
   .get("/:id", getRealestate)
   .get("/", getRealestates)

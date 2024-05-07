@@ -112,6 +112,7 @@ CREATE TABLE realestates (
     owner_number VARCHAR(255) NOT NULL,
     customer_number VARCHAR(255) NOT NULL,
     auction_id BIGINT UNSIGNED NOT NULL,
+    is_evaluated BOOLEAN DEFAULT false,
     FOREIGN KEY (auction_id) REFERENCES auctions(id),
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
