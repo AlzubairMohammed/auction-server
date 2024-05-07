@@ -12,6 +12,19 @@ const {
   realestate_components,
   realestate_images,
   realestate_images_descriptions,
+  realestate_owners,
+  realestate_licenses,
+  realestate_documents,
+  realestate_files,
+  comparisons_evaluations,
+  cost_evaluations,
+  direct_costs,
+  direct_cost_components,
+  indirect_costs,
+  indirect_cost_components,
+  depreciations,
+  comparisons_evaluation_realestates,
+  comparisons_evaluation_realestates_properties,
 } = models;
 
 exports.createAuction = asyncWrapper(async (req, res, next) => {
@@ -51,11 +64,60 @@ exports.getAuction = asyncWrapper(async (req, res) => {
         model: realestate_components,
         as: "realestate_components",
         model: realestate_images,
+        model: realestate_documents,
+        as: "realestate_documents",
+        model: realestate_files,
+        as: "realestate_files",
         as: "realestate_images",
-        include: {
-          model: realestate_images_descriptions,
-          as: "realestate_images_description",
-        },
+        model: realestate_images_descriptions,
+        as: "realestate_images_description",
+        model: realestate_owners,
+        as: "realestate_owners",
+        model: realestate_licenses,
+        as: "realestate_licenses",
+        model: comparisons_evaluations,
+        as: "comparisons_evaluations",
+
+        include: [
+          {
+            model: comparisons_evaluation_realestates,
+            as: "comparisons_evaluation_realestates",
+            include: [
+              {
+                model: comparisons_evaluation_realestates_properties,
+                as: "comparisons_evaluation_realestates_properties",
+              },
+            ],
+          },
+        ],
+        model: cost_evaluations,
+        as: "cost_evaluations",
+        include: [
+          {
+            model: direct_costs,
+            as: "direct_costs",
+            include: [
+              {
+                model: direct_cost_components,
+                as: "direct_cost_components",
+              },
+            ],
+          },
+          {
+            model: indirect_costs,
+            as: "indirect_costs",
+            include: [
+              {
+                model: indirect_cost_components,
+                as: "indirect_cost_components",
+              },
+            ],
+          },
+          {
+            model: depreciations,
+            as: "depreciations",
+          },
+        ],
       },
     },
   });
