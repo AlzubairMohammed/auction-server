@@ -11,6 +11,9 @@ const {
   realestate_licenses,
   realestate_documents,
   realestate_files,
+  comparisons_evaluations,
+  comparisons_evaluation_realestates,
+  comparisons_evaluation_realestates_properties,
 } = models;
 
 exports.createRealestate = asyncWrapper(async (req, res, next) => {
@@ -143,6 +146,22 @@ exports.getRealestate = asyncWrapper(async (req, res) => {
       {
         model: realestate_files,
         as: "realestate_files",
+      },
+      {
+        model: comparisons_evaluations,
+        as: "comparisons_evaluations",
+        include: [
+          {
+            model: comparisons_evaluation_realestates,
+            as: "comparisons_evaluation_realestates",
+            include: [
+              {
+                model: comparisons_evaluation_realestates_properties,
+                as: "comparisons_evaluation_realestates_properties",
+              },
+            ],
+          },
+        ],
       },
     ],
   });
