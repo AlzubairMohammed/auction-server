@@ -14,6 +14,12 @@ const {
   comparisons_evaluations,
   comparisons_evaluation_realestates,
   comparisons_evaluation_realestates_properties,
+  cost_evaluations,
+  direct_costs,
+  direct_cost_components,
+  indirect_costs,
+  indirect_cost_components,
+  depreciations,
 } = models;
 
 exports.createRealestate = asyncWrapper(async (req, res, next) => {
@@ -160,6 +166,36 @@ exports.getRealestate = asyncWrapper(async (req, res) => {
                 as: "comparisons_evaluation_realestates_properties",
               },
             ],
+          },
+        ],
+      },
+      {
+        model: cost_evaluations,
+        as: "cost_evaluations",
+        include: [
+          {
+            model: direct_costs,
+            as: "direct_costs",
+            include: [
+              {
+                model: direct_cost_components,
+                as: "direct_cost_components",
+              },
+            ],
+          },
+          {
+            model: indirect_costs,
+            as: "indirect_costs",
+            include: [
+              {
+                model: indirect_cost_components,
+                as: "indirect_cost_components",
+              },
+            ],
+          },
+          {
+            model: depreciations,
+            as: "depreciations",
           },
         ],
       },
