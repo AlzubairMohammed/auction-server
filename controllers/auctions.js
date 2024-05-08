@@ -58,67 +58,70 @@ exports.getAuction = asyncWrapper(async (req, res) => {
     include: {
       model: realestates,
       as: "realestates",
-      include: {
-        model: realestate_properties,
-        as: "realestate_properties",
-        model: realestate_components,
-        as: "realestate_components",
-        model: realestate_images,
-        model: realestate_documents,
-        as: "realestate_documents",
-        model: realestate_files,
-        as: "realestate_files",
-        as: "realestate_images",
-        model: realestate_images_descriptions,
-        as: "realestate_images_description",
-        model: realestate_owners,
-        as: "realestate_owners",
-        model: realestate_licenses,
-        as: "realestate_licenses",
-        model: comparisons_evaluations,
-        as: "comparisons_evaluations",
-
-        include: [
-          {
-            model: comparisons_evaluation_realestates,
-            as: "comparisons_evaluation_realestates",
-            include: [
-              {
-                model: comparisons_evaluation_realestates_properties,
-                as: "comparisons_evaluation_realestates_properties",
-              },
-            ],
-          },
-        ],
-        model: cost_evaluations,
-        as: "cost_evaluations",
-        include: [
-          {
-            model: direct_costs,
-            as: "direct_costs",
-            include: [
-              {
-                model: direct_cost_components,
-                as: "direct_cost_components",
-              },
-            ],
-          },
-          {
-            model: indirect_costs,
-            as: "indirect_costs",
-            include: [
-              {
-                model: indirect_cost_components,
-                as: "indirect_cost_components",
-              },
-            ],
-          },
-          {
-            model: depreciations,
-            as: "depreciations",
-          },
-        ],
-      },
+      include: [
+        {
+          model: realestate_owners,
+          as: "realestate_owners",
+        },
+        {
+          model: realestate_licenses,
+          as: "realestate_licenses",
+        },
+        {
+          model: realestate_documents,
+          as: "realestate_documents",
+        },
+        {
+          model: realestate_files,
+          as: "realestate_files",
+        },
+        {
+          model: comparisons_evaluations,
+          as: "comparisons_evaluations",
+          include: [
+            {
+              model: comparisons_evaluation_realestates,
+              as: "comparisons_evaluation_realestates",
+              include: [
+                {
+                  model: comparisons_evaluation_realestates_properties,
+                  as: "comparisons_evaluation_realestates_properties",
+                },
+              ],
+            },
+          ],
+        },
+        {
+          model: cost_evaluations,
+          as: "cost_evaluations",
+          include: [
+            {
+              model: direct_costs,
+              as: "direct_costs",
+              include: [
+                {
+                  model: direct_cost_components,
+                  as: "direct_cost_components",
+                },
+              ],
+            },
+            {
+              model: indirect_costs,
+              as: "indirect_costs",
+              include: [
+                {
+                  model: indirect_cost_components,
+                  as: "indirect_cost_components",
+                },
+              ],
+            },
+            {
+              model: depreciations,
+              as: "depreciations",
+            },
+          ],
+        },
+      ],
     },
   });
   return res.json({ status: httpStatus.SUCCESS, data });
