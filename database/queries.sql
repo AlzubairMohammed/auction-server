@@ -105,45 +105,6 @@ CREATE TABLE realestate_types (
     updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE realestates (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    customer_name VARCHAR(255) NOT NULL,
-    owner_name VARCHAR(255) NOT NULL,
-    owner_number VARCHAR(255) NOT NULL,
-    customer_number VARCHAR(255) NOT NULL,
-    auction_id BIGINT UNSIGNED NOT NULL,
-    is_evaluated BOOLEAN DEFAULT false,
-    FOREIGN KEY (auction_id) REFERENCES auctions(id),
-    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-
-CREATE TABLE realestate_documents (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    number VARCHAR(255) NOT NULL,
-    area_number VARCHAR(255) NOT NULL,
-    block_number VARCHAR(255) NOT NULL,
-    graph_number VARCHAR(255) NOT NULL,
-    space VARCHAR(255) NOT NULL,
-    quarter_id BIGINT UNSIGNED NOT NULL,
-    north_desc VARCHAR(255) NOT NULL,
-    north_space INT NOT NULL,
-    west_desc VARCHAR(255) NOT NULL,
-    west_space INT NOT NULL,
-    east_desc VARCHAR(255) NOT NULL,
-    east_space INT NOT NULL,
-    south_desc VARCHAR(255) NOT NULL,
-    south_space INT NOT NULL,
-    note TEXT,
-    path VARCHAR(255),
-    date TIMESTAMP NOT NULL,
-    realestate_id BIGINT UNSIGNED NOT NULL,
-    FOREIGN KEY (realestate_id) REFERENCES realestates(id),
-    FOREIGN KEY (quarter_id) REFERENCES quarters(id),
-    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-
 CREATE TABLE areas (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -168,8 +129,6 @@ CREATE TABLE realestate_licenses (
     date DATE NOT NULL,
     path VARCHAR(255) NOT NULL,
     note TEXT,
-    realestate_id BIGINT UNSIGNED NOT NULL,
-    FOREIGN KEY (realestate_id) REFERENCES realestates(id),
     FOREIGN KEY (issuance_place_id) REFERENCES cities(id),
     FOREIGN KEY (realestate_type_id) REFERENCES realestate_types(id),
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -181,6 +140,49 @@ CREATE TABLE quarters (
     name VARCHAR(255) NOT NULL,
     city_id BIGINT UNSIGNED NOT NULL,
     FOREIGN KEY (city_id) REFERENCES cities(id),
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE realestate_documents (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    number VARCHAR(255) NOT NULL,
+    area_number VARCHAR(255) NOT NULL,
+    block_number VARCHAR(255) NOT NULL,
+    graph_number VARCHAR(255) NOT NULL,
+    space VARCHAR(255) NOT NULL,
+    quarter_id BIGINT UNSIGNED NOT NULL,
+    north_desc VARCHAR(255) NOT NULL,
+    north_space INT NOT NULL,
+    west_desc VARCHAR(255) NOT NULL,
+    west_space INT NOT NULL,
+    east_desc VARCHAR(255) NOT NULL,
+    east_space INT NOT NULL,
+    south_desc VARCHAR(255) NOT NULL,
+    south_space INT NOT NULL,
+    note TEXT,
+    path VARCHAR(255),
+    date TIMESTAMP NOT NULL,
+    FOREIGN KEY (quarter_id) REFERENCES quarters(id),
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE realestates (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    customer_name VARCHAR(255) NOT NULL,
+    owner_name VARCHAR(255) NOT NULL,
+    owner_number VARCHAR(255) NOT NULL,
+    customer_number VARCHAR(255) NOT NULL,
+    auction_id BIGINT UNSIGNED NOT NULL,
+    is_evaluated BOOLEAN DEFAULT false,
+    license_id BIGINT UNSIGNED NOT NULL,
+    document_id BIGINT UNSIGNED NOT NULL,
+    FOREIGN KEY (auction_id) REFERENCES auctions(id),
+    FOREIGN KEY (license_id) REFERENCES realestate_licenses(id),
+    FOREIGN KEY (document_id) REFERENCES realestate_documents(id),
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

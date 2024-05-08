@@ -38,8 +38,21 @@ exports.createRealestate = asyncWrapper(async (req, res, next) => {
     return next(error);
   }
   const { owners, document } = req.body;
+  // create realestate document
+  if (document) {
+    const documentData = await realestate_documents.create(document, {
+      transaction,
+    });
+    req.body.document_id = documentData.id;
+  }
+  // create realestate license
+  if (req.body.license) {
+    const licenseData = await realestate_licenses.create(req.body.license, {
+      transaction,
+    });
+    req.body.license_id = licenseData.id;
+  }
   // create realestate
-
   let data = await realestates.create(req.body, { transaction });
   // upload files
   if (req.files) {
@@ -71,14 +84,6 @@ exports.createRealestate = asyncWrapper(async (req, res, next) => {
       );
     }
   }
-  // create realestate document
-  if (document) {
-    document.realestate_id = data.id;
-    await realestate_documents.create(document, { transaction });
-  }
-  // create realestate license
-  req.body.license.realestate_id = data.id;
-  await realestate_licenses.create(req.body.license, { transaction });
   // create realestate owners
   if (owners) {
     await realestate_owners.bulkCreate(
@@ -143,11 +148,11 @@ exports.getRealestate = asyncWrapper(async (req, res) => {
       },
       {
         model: realestate_licenses,
-        as: "realestate_licenses",
+        as: "license",
       },
       {
         model: realestate_documents,
-        as: "realestate_documents",
+        as: "document",
       },
       {
         model: realestate_files,
