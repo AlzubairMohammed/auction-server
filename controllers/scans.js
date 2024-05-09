@@ -45,6 +45,7 @@ exports.getScan = asyncWrapper(async (req, res) => {
 
 exports.createScan = asyncWrapper(async (req, res, next) => {
   req.body = convertFormData(req.body);
+  // return res.status(500).json(req.body);
   if (req.body.properties) {
     req.body.properties = Object.values(req.body.properties);
   }
@@ -61,20 +62,39 @@ exports.createScan = asyncWrapper(async (req, res, next) => {
   if (req.body.properties) {
     await Promise.all(
       req.body.properties.map(async (property) => {
-        await realestate_properties.create({
-          realestate_id: req.body.realestate_id,
-          property_id: property.id,
-          value: property.value,
-        });
+        if (property.multiple) {
+          property.value = Object.values(property.value);
+          property.value.map(async (value) => {
+            // return res.status(500).json(value, "multiple value");
+            await realestate_properties.create({
+              realestate_id: req.body.realestate_id,
+              property_id: value.property_id,
+              properties_option_id: value.id,
+            });
+          });
+        } else if (property.type === "single") {
+          await realestate_properties.create({
+            realestate_id: req.body.realestate_id,
+            property_id: property.id,
+            properties_option_id: property.value.id,
+          });
+        } else {
+          await realestate_properties.create({
+            realestate_id: req.body.realestate_id,
+            property_id: property.id,
+            value: property.value,
+          });
+        }
       })
     );
   }
   if (req.body.components) {
+    req.body.components = Object.values(req.body.components);
     await Promise.all(
       req.body.components.map(async (component) => {
         await realestate_components.create({
           realestate_id: req.body.realestate_id,
-          component_id: component.component_id,
+          component_id: component.id,
           value: component.value,
         });
       })
@@ -113,7 +133,7 @@ exports.createScan = asyncWrapper(async (req, res, next) => {
     }
   }
   await transaction.commit();
-  return res.json({ status: httpStatus.SUCCESS, data });
+  return res.status(500).json({ status: httpStatus.SUCCESS, data });
 });
 
 exports.editScan = asyncWrapper(async (req, res) => {

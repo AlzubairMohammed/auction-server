@@ -4,12 +4,14 @@ const httpStatus = require("../utils/httpStatus.js");
 const errorResponse = require("../utils/errorResponse");
 const { validationResult } = require("express-validator");
 const { Op } = require("sequelize");
+const { model } = require("mongoose");
 const {
   auctions,
   users,
   realestates,
   realestate_properties,
   realestate_components,
+  components,
   realestate_images,
   realestate_images_descriptions,
   realestate_owners,
@@ -25,6 +27,11 @@ const {
   depreciations,
   comparisons_evaluation_realestates,
   comparisons_evaluation_realestates_properties,
+  scans,
+  realestate_features,
+  realestate_feature_options,
+  properties,
+  properties_options,
 } = models;
 
 exports.createAuction = asyncWrapper(async (req, res, next) => {
@@ -65,15 +72,38 @@ exports.getAuction = asyncWrapper(async (req, res) => {
         },
         {
           model: realestate_licenses,
-          as: "realestate_licenses",
+          as: "license",
         },
         {
           model: realestate_documents,
-          as: "realestate_documents",
+          as: "document",
         },
         {
           model: realestate_files,
           as: "realestate_files",
+        },
+        {
+          model: scans,
+          as: "scans",
+        },
+        {
+          model: realestate_components,
+          as: "realestate_components",
+          include: [{ model: components, as: "component" }],
+        },
+        {
+          model: realestate_properties,
+          as: "realestate_properties",
+          include: [
+            {
+              model: properties,
+              as: "property",
+            },
+            {
+              model: properties_options,
+              as: "properties_option",
+            },
+          ],
         },
         {
           model: comparisons_evaluations,

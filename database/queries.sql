@@ -238,9 +238,11 @@ CREATE TABLE realestate_properties (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     realestate_id BIGINT UNSIGNED NOT NULL,
     property_id BIGINT UNSIGNED NOT NULL,
+    properties_option_id BIGINT UNSIGNED,
     value VARCHAR(255),
     FOREIGN KEY (realestate_id) REFERENCES realestates(id) ON DELETE CASCADE,
     FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE,
+    FOREIGN KEY (properties_option_id) REFERENCES properties_options(id) ON DELETE CASCADE,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
