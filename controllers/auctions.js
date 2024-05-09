@@ -4,7 +4,6 @@ const httpStatus = require("../utils/httpStatus.js");
 const errorResponse = require("../utils/errorResponse");
 const { validationResult } = require("express-validator");
 const { Op } = require("sequelize");
-const { model } = require("mongoose");
 const {
   auctions,
   users,
@@ -85,6 +84,10 @@ exports.getAuction = asyncWrapper(async (req, res) => {
         {
           model: scans,
           as: "scans",
+          include: {
+            model: users,
+            as: "user",
+          },
         },
         {
           model: realestate_components,
