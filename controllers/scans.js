@@ -133,7 +133,7 @@ exports.createScan = asyncWrapper(async (req, res, next) => {
     }
   }
   await transaction.commit();
-  return res.status(500).json({ status: httpStatus.SUCCESS, data });
+  return res.json({ status: httpStatus.SUCCESS, data });
 });
 
 exports.editScan = asyncWrapper(async (req, res) => {
