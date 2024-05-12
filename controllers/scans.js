@@ -45,13 +45,13 @@ exports.getScan = asyncWrapper(async (req, res) => {
 
 exports.createScan = asyncWrapper(async (req, res, next) => {
   req.body = convertFormData(req.body);
-  // return res.status(500).json(req.body);
   if (req.body.properties) {
     req.body.properties = Object.values(req.body.properties);
   }
   req.files = Object.values(req.files);
   const imagesNames = req.body.imagesNames;
   let counter = 0;
+  // return res.status(500).json(req.body);
   const transaction = await sequelize.transaction();
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -72,13 +72,16 @@ exports.createScan = asyncWrapper(async (req, res, next) => {
               properties_option_id: value.id,
             });
           });
-        } else if (property.type === "single") {
+        } else if (property.type === "single" && property.value) {
+          console.log(property, "property");
           await realestate_properties.create({
             realestate_id: req.body.realestate_id,
             property_id: property.id,
             properties_option_id: property.value.id,
           });
         } else {
+          console.log(property.id, "property id");
+          // return res.status(500).json(property.id);
           await realestate_properties.create({
             realestate_id: req.body.realestate_id,
             property_id: property.id,
