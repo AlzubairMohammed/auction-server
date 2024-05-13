@@ -30,6 +30,7 @@ exports.createRealestate = asyncWrapper(async (req, res, next) => {
   }
   req.files = Object.values(req.files);
   const fileNames = req.body.filesNames;
+  // return res.json({ "Files list": req.files[0][1].name });
   let counter = 0;
   // return res.json({ status: httpStatus.SUCCESS, data: req.body });
   const errors = validationResult(req);
@@ -56,20 +57,20 @@ exports.createRealestate = asyncWrapper(async (req, res, next) => {
   let data = await realestates.create(req.body, { transaction });
   // upload files
   if (req.files) {
-    if (Array.isArray(req.files)) {
+    if (Array.isArray(req.files[0])) {
       await Promise.all(
-        req.files.map(async (file) => {
+        req.files[0].map(async (file) => {
           const dateNow = new Date().toISOString().replace(/[:\.]/g, "-");
-          const filePath = `uploads/realestates/${dateNow}-${file[0].name}`;
+          const filePath = `uploads/realestates/${dateNow}-${file.name}`;
           await realestate_files.create(
             {
               realestate_id: data.id,
               name: filePath,
-              path: file[0].name,
+              path: file.name,
             },
             { transaction }
           );
-          await file[0].mv(filePath);
+          await file.mv(filePath);
         })
       );
     } else {

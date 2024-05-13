@@ -66,6 +66,10 @@ exports.getAuction = asyncWrapper(async (req, res) => {
       as: "realestates",
       include: [
         {
+          model: realestate_images,
+          as: "realestate_images",
+        },
+        {
           model: realestate_owners,
           as: "realestate_owners",
         },
