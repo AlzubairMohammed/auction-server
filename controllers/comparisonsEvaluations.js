@@ -42,6 +42,7 @@ exports.getComparisonsEvaluation = asyncWrapper(async (req, res) => {
 });
 
 exports.createComparisonsEvaluation = asyncWrapper(async (req, res, next) => {
+  // return res.status(500).json({ status: httpStatus.SUCCESS, data: req.body });
   // req.body = convertFormData(req.body);
   let comparisons = req.body.comparisons;
   let properties = req.body.properties;
@@ -56,13 +57,13 @@ exports.createComparisonsEvaluation = asyncWrapper(async (req, res, next) => {
       if (nestedCounter) {
         if (nestedCounter === 1) {
           result +=
-            (realestateItem[0].percentage *
-              realestateItem[counter2 - 1].percentage) /
+            (+realestateItem[0].percentage *
+              +realestateItem[counter2 - 1].percentage) /
             100;
         } else {
           realestateItem[0].percentage +=
-            (comparisons[counter1][0].percentage *
-              realestateItem[nestedCounter - 1].percentage) /
+            (+comparisons[counter1][0].percentage *
+              +realestateItem[nestedCounter - 1].percentage) /
             100;
         }
       }
