@@ -20,6 +20,7 @@ const {
   indirect_costs,
   indirect_cost_components,
   depreciations,
+  realestate_images,
 } = models;
 
 exports.createRealestate = asyncWrapper(async (req, res, next) => {
@@ -143,6 +144,10 @@ exports.getRealestate = asyncWrapper(async (req, res) => {
   let data = await realestates.findOne({
     where: { id: req.params.id },
     include: [
+      {
+        model: realestate_images,
+        as: "realestate_images",
+      },
       {
         model: realestate_owners,
         as: "realestate_owners",
